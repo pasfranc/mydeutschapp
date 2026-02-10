@@ -4,6 +4,8 @@ import {
   doc,
   getDocs,
   setDoc,
+  updateDoc,
+  deleteDoc,
   addDoc,
   query,
   where,
@@ -113,6 +115,36 @@ export function useProgress(deckId, mode, direction) {
   );
 
   return { progress, loading, updateProgress, refetch: fetchProgress };
+}
+
+export async function updateCard(deckId, cardId, data) {
+  await updateDoc(doc(db, 'decks', deckId, 'cards', cardId), data);
+}
+
+export async function deleteCard(deckId, cardId) {
+  await deleteDoc(doc(db, 'decks', deckId, 'cards', cardId));
+  // Update totalCards count
+  const snapshot = await getDocs(collection(db, 'decks', deckId, 'cards'));
+  await updateDoc(doc(db, 'decks', deckId), { totalCards: snapshot.size });
+}
+
+export async function deleteDeck(deckId) {
+  // Delete all cards
+  const cardsSnap = await getDocs(collection(db, 'decks', deckId, 'cards'));
+  const batch = writeBatch(db);
+  cardsSnap.docs.forEach((d) => batch.delete(d.ref));
+  batch.delete(doc(db, 'decks', deckId));
+  await batch.commit();
+
+  // Delete all progress for this deck
+  const progressSnap = await getDocs(
+    query(collection(db, 'progress'), where('deckId', '==', deckId))
+  );
+  if (progressSnap.size > 0) {
+    const pBatch = writeBatch(db);
+    progressSnap.docs.forEach((d) => pBatch.delete(d.ref));
+    await pBatch.commit();
+  }
 }
 
 export async function importDeck(userId, name, description, cards) {

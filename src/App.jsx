@@ -7,6 +7,7 @@ import StudyOptions from './components/StudyOptions';
 import FlashcardMode from './components/FlashcardMode';
 import TranslationMode from './components/TranslationMode';
 import CompleteScreen from './components/CompleteScreen';
+import DeckDetail from './components/DeckDetail';
 import { useDeckCards, useProgress } from './hooks/useFirestore';
 import { getCardsToReview, DEFAULT_PROGRESS } from './utils/srs';
 
@@ -17,6 +18,7 @@ import { getCardsToReview, DEFAULT_PROGRESS } from './utils/srs';
  * - options: study options for a deck
  * - study: flashcard or translation mode
  * - complete: session complete
+ * - edit: deck detail (view/edit/delete cards)
  */
 
 function StudySession({ deck, mode, direction, sessionSize, onComplete, onBack }) {
@@ -126,6 +128,11 @@ function AppContent() {
     setScreen('options');
   }, []);
 
+  const handleEditDeck = useCallback((deck) => {
+    setSelectedDeck(deck);
+    setScreen('edit');
+  }, []);
+
   const handleStartStudy = useCallback((mode, direction, sessionSize) => {
     setStudyMode(mode);
     setStudyDirection(direction);
@@ -158,6 +165,7 @@ function AppContent() {
         <DeckList
           onSelectDeck={handleSelectDeck}
           onImport={() => setScreen('import')}
+          onEditDeck={handleEditDeck}
         />
       );
 
@@ -189,6 +197,15 @@ function AppContent() {
           sessionSize={studySize}
           onComplete={handleComplete}
           onBack={handleBackToDecks}
+        />
+      );
+
+    case 'edit':
+      return (
+        <DeckDetail
+          deck={selectedDeck}
+          onBack={handleBackToDecks}
+          onDeckDeleted={handleBackToDecks}
         />
       );
 
