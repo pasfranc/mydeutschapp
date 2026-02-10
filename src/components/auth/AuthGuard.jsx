@@ -12,7 +12,7 @@ export default function AuthGuard({ children }) {
       <div className="min-h-dvh flex items-center justify-center gradient-bg">
         <div className="text-center text-white">
           <div className="text-5xl mb-4">🇩🇪</div>
-          <div className="text-lg font-medium">Caricamento...</div>
+          <div className="text-lg font-medium">Loading...</div>
         </div>
       </div>
     );

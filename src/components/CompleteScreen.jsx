@@ -47,36 +47,36 @@ export default function CompleteScreen({ stats, onStudyAgain, onBackToDecks }) {
         <div className="text-7xl mb-4">🎉</div>
 
         <h1 className="text-2xl font-bold text-primary mb-1">
-          Sessione completata!
+          Session complete!
         </h1>
-        <p className="text-lg text-dark/50 mb-8">Ottimo lavoro!</p>
+        <p className="text-lg text-dark/50 mb-8">Great job!</p>
 
         {/* Stats grid */}
         <div className="grid grid-cols-2 gap-3 mb-8">
           <div className="bg-light rounded-xl p-4">
             <p className="text-3xl font-bold text-primary">{stats.total}</p>
-            <p className="text-sm text-dark/40">Studiate</p>
+            <p className="text-sm text-dark/40">Studied</p>
           </div>
           <div className="bg-light rounded-xl p-4">
             <p className="text-3xl font-bold text-primary">{stats.correct}</p>
-            <p className="text-sm text-dark/40">Corrette</p>
+            <p className="text-sm text-dark/40">Correct</p>
           </div>
           <div className="bg-light rounded-xl p-4">
             <p className="text-3xl font-bold text-primary">{accuracy}%</p>
-            <p className="text-sm text-dark/40">Accuratezza</p>
+            <p className="text-sm text-dark/40">Accuracy</p>
           </div>
           <div className="bg-light rounded-xl p-4">
             <p className="text-3xl font-bold text-primary">{timeStr}</p>
-            <p className="text-sm text-dark/40">Tempo</p>
+            <p className="text-sm text-dark/40">Time</p>
           </div>
         </div>
 
         <div className="space-y-3">
           <button onClick={onStudyAgain} className="btn-primary w-full">
-            Studia ancora
+            Study again
           </button>
           <button onClick={onBackToDecks} className="btn-secondary w-full">
-            Torna ai mazzi
+            Back to decks
           </button>
         </div>
       </div>

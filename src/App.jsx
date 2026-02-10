@@ -70,7 +70,7 @@ function StudySession({ deck, mode, direction, sessionSize, onComplete, onBack }
   if (cardsLoading || progressLoading || !studyCards) {
     return (
       <div className="min-h-dvh flex items-center justify-center">
-        <div className="text-dark/40 text-lg">Preparazione carte...</div>
+        <div className="text-dark/40 text-lg">Preparing cards...</div>
       </div>
     );
   }
@@ -79,12 +79,12 @@ function StudySession({ deck, mode, direction, sessionSize, onComplete, onBack }
     return (
       <div className="min-h-dvh flex flex-col items-center justify-center p-4">
         <div className="text-5xl mb-4">✅</div>
-        <h2 className="text-xl font-bold text-dark mb-2">Tutto fatto!</h2>
+        <h2 className="text-xl font-bold text-dark mb-2">All done!</h2>
         <p className="text-dark/50 text-center mb-6">
-          Non ci sono carte da rivedere ora. Torna piu tardi!
+          No cards to review right now. Come back later!
         </p>
         <button onClick={onBack} className="btn-primary">
-          Torna ai mazzi
+          Back to decks
         </button>
       </div>
     );

@@ -88,7 +88,7 @@ export default function FlashcardMode({
       {/* Header */}
       <div className="px-4 py-3 safe-area-top">
         <p className="text-sm text-dark/50 mb-1">
-          Carta {currentIndex + 1} di {total}
+          Card {currentIndex + 1} of {total}
         </p>
         <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
           <div
@@ -118,7 +118,7 @@ export default function FlashcardMode({
                 {front}
               </p>
               <p className="text-sm text-dark/30 mt-8">
-                Tap per vedere
+                Tap to reveal
               </p>
             </div>
           ) : (
@@ -166,7 +166,7 @@ export default function FlashcardMode({
               className="bg-success/10 text-success font-semibold rounded-xl py-3 active:scale-95 transition-transform"
             >
               <span className="block text-base">Easy →</span>
-              <span className="block text-xs mt-0.5 opacity-60">4 giorni</span>
+              <span className="block text-xs mt-0.5 opacity-60">4 days</span>
             </button>
           </div>
         </div>
