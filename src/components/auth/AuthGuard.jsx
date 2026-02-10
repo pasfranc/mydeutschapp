@@ -9,8 +9,8 @@ export default function AuthGuard({ children }) {
 
   if (loading) {
     return (
-      <div className="min-h-dvh flex items-center justify-center gradient-bg">
-        <div className="text-center text-white">
+      <div className="min-h-dvh flex items-center justify-center bg-light">
+        <div className="text-center text-dark/40">
           <div className="text-5xl mb-4">🇩🇪</div>
           <div className="text-lg font-medium">Loading...</div>
         </div>

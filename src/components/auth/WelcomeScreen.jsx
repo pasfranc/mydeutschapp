@@ -23,7 +23,7 @@ export default function WelcomeScreen({ onEmailSent }) {
   };
 
   return (
-    <div className="min-h-dvh gradient-bg flex items-center justify-center p-4">
+    <div className="min-h-dvh bg-light flex items-center justify-center p-4">
       <div className="card w-full max-w-sm mx-auto text-center p-8">
         <div className="text-6xl mb-4">🇩🇪</div>
         <h1 className="text-2xl font-bold text-dark mb-2">myDeutschApp</h1>

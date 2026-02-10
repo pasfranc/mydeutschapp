@@ -71,9 +71,6 @@
     padding-bottom: env(safe-area-inset-bottom);
   }
 
-  .gradient-bg {
-    background: linear-gradient(135deg, #ff6b6b 0%, #4ecdc4 100%);
-  }
 }
 
 @layer utilities {
