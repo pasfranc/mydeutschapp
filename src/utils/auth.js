@@ -20,7 +20,7 @@ export const completeMagicLinkSignIn = async () => {
   if (isSignInWithEmailLink(auth, window.location.href)) {
     let email = window.localStorage.getItem('emailForSignIn');
     if (!email) {
-      email = window.prompt('Inserisci la tua email per conferma');
+      email = window.prompt('Enter your email to confirm');
     }
     if (!email) return null;
     const result = await signInWithEmailLink(auth, email, window.location.href);

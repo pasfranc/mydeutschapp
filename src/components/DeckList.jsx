@@ -70,7 +70,7 @@ export default function DeckList({ onSelectDeck, onImport, onSettings }) {
   if (loading) {
     return (
       <div className="min-h-dvh bg-light flex items-center justify-center">
-        <div className="text-dark/40 text-lg">Caricamento mazzi...</div>
+        <div className="text-dark/40 text-lg">Loading decks...</div>
       </div>
     );
   }
@@ -80,10 +80,10 @@ export default function DeckList({ onSelectDeck, onImport, onSettings }) {
       {/* Top bar */}
       <div className="sticky top-0 bg-white/80 backdrop-blur-sm z-10 px-4 py-3 flex items-center justify-between border-b border-gray-100">
         <button onClick={handleLogout} className="text-dark/50 text-sm font-medium">
-          Esci
+          Logout
         </button>
         <h1 className="text-lg font-bold text-dark flex items-center gap-1">
-          🇩🇪 Mazzi
+          🇩🇪 Decks
         </h1>
         <div className="w-10" />
       </div>
@@ -101,16 +101,16 @@ export default function DeckList({ onSelectDeck, onImport, onSettings }) {
 
               <div className="space-y-1.5 mb-4 text-base">
                 <p className="text-dark/60">
-                  📚 {deck.totalCards} carte
+                  📚 {deck.totalCards} cards
                 </p>
                 {stats.flashcardDue > 0 && (
                   <p className="text-dark/60">
-                    🎴 {stats.flashcardDue} flashcard da rivedere
+                    🎴 {stats.flashcardDue} flashcards to review
                   </p>
                 )}
                 {stats.translationDue > 0 && (
                   <p className="text-dark/60">
-                    ✍️ {stats.translationDue} translation da rivedere
+                    ✍️ {stats.translationDue} translations to review
                   </p>
                 )}
               </div>
@@ -119,7 +119,7 @@ export default function DeckList({ onSelectDeck, onImport, onSettings }) {
                 onClick={() => onSelectDeck(deck)}
                 className="btn-primary w-full text-base"
               >
-                Studia ora →
+                Study now →
               </button>
             </div>
           );
@@ -128,8 +128,8 @@ export default function DeckList({ onSelectDeck, onImport, onSettings }) {
         {decks.length === 0 && (
           <div className="text-center py-12 text-dark/40">
             <div className="text-5xl mb-4">📚</div>
-            <p className="text-lg mb-2">Nessun mazzo</p>
-            <p className="text-sm">Importa il tuo primo mazzo per iniziare</p>
+            <p className="text-lg mb-2">No decks yet</p>
+            <p className="text-sm">Import your first deck to get started</p>
           </div>
         )}
 
@@ -140,7 +140,7 @@ export default function DeckList({ onSelectDeck, onImport, onSettings }) {
             text-secondary font-semibold text-base text-center
             active:bg-secondary/5 transition-colors"
         >
-          + Importa nuovo mazzo
+          + Import new deck
         </button>
       </div>
     </div>

@@ -24,11 +24,11 @@ export default function EmailSentScreen({ email, onBack }) {
         <div className="text-7xl mb-6 animate-bounce">✉️</div>
 
         <h1 className="text-2xl font-bold text-primary mb-3">
-          Email inviata!
+          Email sent!
         </h1>
 
         <p className="text-dark/60 text-lg mb-2">
-          Controlla la casella e clicca il link per accedere
+          Check your inbox and click the link to sign in
         </p>
 
         <p className="text-secondary font-medium text-base mb-8">{email}</p>
@@ -38,7 +38,7 @@ export default function EmailSentScreen({ email, onBack }) {
           disabled={resending}
           className="text-primary font-semibold text-base"
         >
-          {resending ? 'Invio...' : resent ? 'Inviato!' : 'Invia di nuovo'}
+          {resending ? 'Sending...' : resent ? 'Sent!' : 'Resend'}
         </button>
 
         <div className="mt-6">
@@ -46,7 +46,7 @@ export default function EmailSentScreen({ email, onBack }) {
             onClick={onBack}
             className="text-dark/40 text-sm"
           >
-            Usa un'altra email
+            Use a different email
           </button>
         </div>
       </div>

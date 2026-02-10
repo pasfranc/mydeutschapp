@@ -15,7 +15,7 @@ export default function WelcomeScreen({ onEmailSent }) {
       await sendMagicLink(email.trim());
       onEmailSent(email.trim());
     } catch (err) {
-      setError('Errore nell\'invio. Riprova.');
+      setError('Failed to send. Please try again.');
       console.error(err);
     } finally {
       setSending(false);
@@ -28,7 +28,7 @@ export default function WelcomeScreen({ onEmailSent }) {
         <div className="text-6xl mb-4">🇩🇪</div>
         <h1 className="text-2xl font-bold text-dark mb-2">myDeutschApp</h1>
         <p className="text-dark/60 mb-8 text-base">
-          Impara tedesco con flashcard e ripetizione dilazionata
+          Learn German with flashcards and spaced repetition
         </p>
 
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -36,7 +36,7 @@ export default function WelcomeScreen({ onEmailSent }) {
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            placeholder="tua@email.com"
+            placeholder="your@email.com"
             className="w-full h-14 px-4 text-lg rounded-xl border-2 border-gray-200
               focus:border-secondary focus:outline-none transition-colors"
             autoComplete="email"
@@ -53,13 +53,10 @@ export default function WelcomeScreen({ onEmailSent }) {
             disabled={sending || !email.trim()}
             className="btn-primary w-full disabled:opacity-50"
           >
-            {sending ? 'Invio in corso...' : 'Ricevi link di accesso'}
+            {sending ? 'Sending...' : 'Get sign-in link'}
           </button>
         </form>
 
-        <p className="text-sm text-dark/40 mt-6">
-          Niente password, solo una email
-        </p>
       </div>
     </div>
   );

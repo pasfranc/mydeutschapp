@@ -43,7 +43,7 @@ const findDifferences = (userAnswer, correctAnswer) => {
   for (let i = 0; i < Math.max(userWords.length, correctWords.length); i++) {
     if (userWords[i] !== correctWords[i]) {
       differences.push({
-        user: userWords[i] || '(mancante)',
+        user: userWords[i] || '(missing)',
         correct: correctWords[i] || '(extra)',
       });
     }
@@ -55,7 +55,7 @@ export const validateTranslation = (userAnswer, correctAnswer) => {
   if (!userAnswer || userAnswer.trim() === '') {
     return {
       status: 'wrong',
-      message: 'Scrivi una traduzione',
+      message: 'Write a translation',
       differences: [],
     };
   }
@@ -65,14 +65,14 @@ export const validateTranslation = (userAnswer, correctAnswer) => {
   const similarity = calculateSimilarity(userNorm, correctNorm);
 
   if (similarity >= 0.95) {
-    return { status: 'perfect', message: 'Perfetto!', differences: [] };
+    return { status: 'perfect', message: 'Perfect!', differences: [] };
   } else if (similarity >= 0.8) {
     return {
       status: 'close',
-      message: 'Quasi corretto!',
+      message: 'Almost correct!',
       differences: findDifferences(userAnswer, correctAnswer),
     };
   } else {
-    return { status: 'wrong', message: 'Non corretto', differences: [] };
+    return { status: 'wrong', message: 'Incorrect', differences: [] };
   }
 };

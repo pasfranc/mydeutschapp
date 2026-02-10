@@ -7,9 +7,9 @@ export default function StudyOptions({ deck, onStart, onBack }) {
   const [customSize, setCustomSize] = useState('');
 
   const sizes = [
-    { label: 'Piccolo', value: 20 },
-    { label: 'Medio', value: 40 },
-    { label: 'Lungo', value: 60 },
+    { label: 'Small', value: 20 },
+    { label: 'Medium', value: 40 },
+    { label: 'Large', value: 60 },
     { label: 'Custom', value: 'custom' },
   ];
 
@@ -22,14 +22,14 @@ export default function StudyOptions({ deck, onStart, onBack }) {
         <button onClick={onBack} className="text-primary font-medium text-base">
           ←
         </button>
-        <h1 className="text-lg font-bold text-dark ml-4">Opzioni</h1>
+        <h1 className="text-lg font-bold text-dark ml-4">Options</h1>
       </div>
 
       <div className="flex-1 p-4 space-y-6 overflow-y-auto pb-28">
         {/* Mode selection */}
         <div>
           <h2 className="text-lg font-bold text-dark mb-3 flex items-center gap-2">
-            🎯 Modalita
+            🎯 Mode
           </h2>
           <div className="space-y-3">
             <button
@@ -57,7 +57,7 @@ export default function StudyOptions({ deck, onStart, onBack }) {
                     🎴 Flashcard
                   </span>
                   <p className="text-sm text-dark/50 mt-0.5">
-                    Riconosci il termine
+                    Recognize the term
                   </p>
                 </div>
               </div>
@@ -88,7 +88,7 @@ export default function StudyOptions({ deck, onStart, onBack }) {
                     ✍️ Translation
                   </span>
                   <p className="text-sm text-dark/50 mt-0.5">
-                    Scrivi la frase
+                    Write the sentence
                   </p>
                 </div>
               </div>
@@ -99,7 +99,7 @@ export default function StudyOptions({ deck, onStart, onBack }) {
         {/* Direction selection */}
         <div>
           <h2 className="text-lg font-bold text-dark mb-3 flex items-center gap-2">
-            🔄 Direzione
+            🔄 Direction
           </h2>
           <div className="space-y-3">
             <button
@@ -159,7 +159,7 @@ export default function StudyOptions({ deck, onStart, onBack }) {
         {/* Session length */}
         <div>
           <h2 className="text-lg font-bold text-dark mb-3 flex items-center gap-2">
-            📏 Lunghezza sessione
+            📏 Session length
           </h2>
           <div className="grid grid-cols-2 gap-3">
             {sizes.map((s) => (
@@ -176,7 +176,7 @@ export default function StudyOptions({ deck, onStart, onBack }) {
                   {s.label}
                 </span>
                 {s.value !== 'custom' && (
-                  <span className="text-sm text-dark/50">{s.value} carte</span>
+                  <span className="text-sm text-dark/50">{s.value} cards</span>
                 )}
               </button>
             ))}
@@ -189,14 +189,14 @@ export default function StudyOptions({ deck, onStart, onBack }) {
                 min="1"
                 value={customSize}
                 onChange={(e) => setCustomSize(e.target.value)}
-                placeholder="Numero di carte"
+                placeholder="Number of cards"
                 className="w-full h-14 px-4 text-lg rounded-xl border-2 border-gray-200
                   focus:border-secondary focus:outline-none transition-colors"
                 inputMode="numeric"
               />
               {customSize && parseInt(customSize, 10) > deck.totalCards && (
                 <p className="text-sm text-dark/40 mt-2">
-                  Il mazzo ha {deck.totalCards} carte, verranno ripetute per arrivare a {customSize}
+                  The deck has {deck.totalCards} cards, they will repeat to reach {customSize}
                 </p>
               )}
             </div>
@@ -211,7 +211,7 @@ export default function StudyOptions({ deck, onStart, onBack }) {
           disabled={size === 'custom' && (!customSize || parseInt(customSize, 10) < 1)}
           className="btn-primary w-full text-lg disabled:opacity-50"
         >
-          Inizia ({effectiveSize} carte)
+          Start ({effectiveSize} cards)
         </button>
       </div>
     </div>

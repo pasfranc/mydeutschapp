@@ -30,7 +30,7 @@ export default function TranslationMode({
     direction === 'de-it' ? card?.exampleIT || card?.italian : card?.exampleDE || card?.german;
 
   const promptLabel =
-    direction === 'de-it' ? 'Traduci in italiano:' : 'Traduci in tedesco:';
+    direction === 'de-it' ? 'Translate to Italian:' : 'Translate to German:';
 
   useEffect(() => {
     if (!result && textareaRef.current) {
@@ -97,7 +97,7 @@ export default function TranslationMode({
       {/* Header */}
       <div className="px-4 py-3 safe-area-top">
         <p className="text-sm text-dark/50 mb-1">
-          Carta {currentIndex + 1} di {total}
+          Card {currentIndex + 1} of {total}
         </p>
         <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
           <div
@@ -122,7 +122,7 @@ export default function TranslationMode({
               ref={textareaRef}
               value={answer}
               onChange={(e) => setAnswer(e.target.value)}
-              placeholder="Scrivi qui la traduzione..."
+              placeholder="Write your translation here..."
               className="w-full h-32 p-4 text-lg rounded-xl border-2 border-gray-200
                 focus:border-secondary focus:outline-none transition-colors resize-none"
               autoCapitalize="off"
@@ -143,12 +143,12 @@ export default function TranslationMode({
 
             <div className="card space-y-4">
               <div>
-                <p className="text-sm text-dark/40 mb-1">La tua risposta:</p>
+                <p className="text-sm text-dark/40 mb-1">Your answer:</p>
                 <p className="text-lg text-dark">{answer}</p>
               </div>
 
               <div>
-                <p className="text-sm text-dark/40 mb-1">Risposta corretta:</p>
+                <p className="text-sm text-dark/40 mb-1">Correct answer:</p>
                 <p className="text-lg text-secondary font-medium">
                   {correctAnswer}
                 </p>
@@ -157,7 +157,7 @@ export default function TranslationMode({
               {result.differences.length > 0 && (
                 <div>
                   <p className="text-sm text-dark/40 mb-1">
-                    💡 Differenze:
+                    💡 Differences:
                   </p>
                   {result.differences.map((diff, i) => (
                     <p key={i} className="text-base">
@@ -185,7 +185,7 @@ export default function TranslationMode({
             disabled={!answer.trim()}
             className="btn-primary w-full disabled:opacity-50"
           >
-            Controlla risposta
+            Check answer
           </button>
         ) : (
           <div className="grid grid-cols-3 gap-3">
