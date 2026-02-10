@@ -170,7 +170,7 @@ export default function DeckDetail({ deck, onBack, onDeckDeleted }) {
                 <div className="flex gap-2 pt-1">
                   <button
                     onClick={() => handleSave(card.id)}
-                    disabled={saving || !editForm.german.trim() || !editForm.italian.trim()}
+                    disabled={saving || !editForm.german.trim() || !editForm.italian.trim() || !editForm.exampleDE.trim() || !editForm.exampleIT.trim()}
                     className="flex-1 bg-secondary text-white font-semibold rounded-lg py-2 text-sm active:scale-95 transition-transform disabled:opacity-50"
                   >
                     {saving ? 'Saving...' : 'Save'}
@@ -255,7 +255,7 @@ export default function DeckDetail({ deck, onBack, onDeckDeleted }) {
             <div className="flex gap-2 pt-1">
               <button
                 onClick={handleAddCard}
-                disabled={saving || !addForm.german.trim() || !addForm.italian.trim()}
+                disabled={saving || !addForm.german.trim() || !addForm.italian.trim() || !addForm.exampleDE.trim() || !addForm.exampleIT.trim()}
                 className="flex-1 bg-secondary text-white font-semibold rounded-lg py-2 text-sm active:scale-95 transition-transform disabled:opacity-50"
               >
                 {saving ? 'Saving...' : 'Save'}
