@@ -5,7 +5,7 @@ import { useAuth } from '../context/AuthContext';
 import { useDecks } from '../hooks/useFirestore';
 import { logout } from '../utils/auth';
 
-export default function DeckList({ onSelectDeck, onImport, onEditDeck }) {
+export default function DeckList({ onSelectDeck, onImport, onEditDeck, onStats }) {
   const { user } = useAuth();
   const { decks, loading, refetch } = useDecks();
   const [deckStats, setDeckStats] = useState({});
@@ -47,6 +47,7 @@ export default function DeckList({ onSelectDeck, onImport, onEditDeck }) {
           stats[deck.id] = {
             flashcardDue: fcDue + fcNew,
             translationDue: trDue + trNew,
+            hasProgress: fcSnap.docs.length > 0 || trSnap.docs.length > 0,
           };
         } catch (err) {
           console.error('Error fetching stats:', err);
@@ -122,6 +123,15 @@ export default function DeckList({ onSelectDeck, onImport, onEditDeck }) {
                   </p>
                 )}
               </div>
+
+              {stats.hasProgress && (
+                <button
+                  onClick={() => onStats(deck)}
+                  className="w-full text-secondary font-semibold text-base py-2 mb-2 active:scale-95 transition-transform"
+                >
+                  Stats
+                </button>
+              )}
 
               <button
                 onClick={() => onSelectDeck(deck)}
