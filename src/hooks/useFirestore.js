@@ -117,6 +117,14 @@ export function useProgress(deckId, mode, direction) {
   return { progress, loading, updateProgress, refetch: fetchProgress };
 }
 
+export async function addCard(deckId, data) {
+  const cardRef = doc(collection(db, 'decks', deckId, 'cards'));
+  await setDoc(cardRef, data);
+  const snapshot = await getDocs(collection(db, 'decks', deckId, 'cards'));
+  await updateDoc(doc(db, 'decks', deckId), { totalCards: snapshot.size });
+  return cardRef.id;
+}
+
 export async function updateCard(deckId, cardId, data) {
   await updateDoc(doc(db, 'decks', deckId, 'cards', cardId), data);
 }
