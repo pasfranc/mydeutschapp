@@ -19,7 +19,7 @@ import { getCardsToReview, DEFAULT_PROGRESS } from './utils/srs';
  * - complete: session complete
  */
 
-function StudySession({ deck, mode, direction, onComplete, onBack }) {
+function StudySession({ deck, mode, direction, sessionSize, onComplete, onBack }) {
   const { cards, loading: cardsLoading } = useDeckCards(deck.id);
   const {
     progress,
@@ -41,18 +41,23 @@ function StudySession({ deck, mode, direction, onComplete, onBack }) {
     setProgressMap(pMap);
 
     // Determine which cards to study
-    // Cards with no progress = new cards (always include)
-    // Cards with progress = only if due for review
     const now = new Date();
-    const toStudy = cards.filter((card) => {
+    let toStudy = cards.filter((card) => {
       const p = pMap[card.id];
-      if (!p) return true; // New card
+      if (!p) return true;
       return new Date(p.nextReview) <= now;
     });
 
-    // If no cards due, show all cards (fresh start)
-    setStudyCards(toStudy.length > 0 ? toStudy : cards);
-  }, [cards, progress, cardsLoading, progressLoading]);
+    // If no cards due, use all cards
+    if (toStudy.length === 0) toStudy = [...cards];
+
+    // Build session of exact sessionSize, repeating cards if needed
+    const session = [];
+    for (let i = 0; i < sessionSize; i++) {
+      session.push(toStudy[i % toStudy.length]);
+    }
+    setStudyCards(session);
+  }, [cards, progress, cardsLoading, progressLoading, sessionSize]);
 
   const handleUpdateProgress = useCallback(
     (cardId, data) => {
@@ -113,6 +118,7 @@ function AppContent() {
   const [selectedDeck, setSelectedDeck] = useState(null);
   const [studyMode, setStudyMode] = useState(null);
   const [studyDirection, setStudyDirection] = useState(null);
+  const [studySize, setStudySize] = useState(20);
   const [completionStats, setCompletionStats] = useState(null);
 
   const handleSelectDeck = useCallback((deck) => {
@@ -120,9 +126,10 @@ function AppContent() {
     setScreen('options');
   }, []);
 
-  const handleStartStudy = useCallback((mode, direction) => {
+  const handleStartStudy = useCallback((mode, direction, sessionSize) => {
     setStudyMode(mode);
     setStudyDirection(direction);
+    setStudySize(sessionSize);
     setScreen('study');
   }, []);
 
@@ -136,6 +143,7 @@ function AppContent() {
     setSelectedDeck(null);
     setStudyMode(null);
     setStudyDirection(null);
+    setStudySize(20);
     setCompletionStats(null);
   }, []);
 
@@ -178,6 +186,7 @@ function AppContent() {
           deck={selectedDeck}
           mode={studyMode}
           direction={studyDirection}
+          sessionSize={studySize}
           onComplete={handleComplete}
           onBack={handleBackToDecks}
         />
