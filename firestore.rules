@@ -14,7 +14,8 @@ service cloud.firestore {
       allow create: if isAuthenticated() && request.resource.data.userId == request.auth.uid;
 
       match /cards/{cardId} {
-        allow read, write: if isAuthenticated();
+        allow read, write: if isAuthenticated()
+          && get(/databases/$(database)/documents/decks/$(deckId)).data.userId == request.auth.uid;
       }
     }
 
