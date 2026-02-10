@@ -1,0 +1,156 @@
+{
+  "name": "Vocabolario Tedesco PM",
+  "description": "Vocabolario di project management in tedesco",
+  "cards": [
+    {
+      "german": "verantwortlich sein für",
+      "italian": "essere responsabile per",
+      "exampleDE": "Ich bin verantwortlich für das Produkt.",
+      "exampleIT": "Io sono responsabile per il prodotto."
+    },
+    {
+      "german": "die Besprechung",
+      "italian": "la riunione",
+      "exampleDE": "Die Besprechung beginnt um 10 Uhr.",
+      "exampleIT": "La riunione inizia alle 10."
+    },
+    {
+      "german": "der Termin",
+      "italian": "l'appuntamento / la scadenza",
+      "exampleDE": "Wir müssen den Termin einhalten.",
+      "exampleIT": "Dobbiamo rispettare la scadenza."
+    },
+    {
+      "german": "die Anforderung",
+      "italian": "il requisito",
+      "exampleDE": "Die Anforderungen sind klar definiert.",
+      "exampleIT": "I requisiti sono chiaramente definiti."
+    },
+    {
+      "german": "das Ergebnis",
+      "italian": "il risultato",
+      "exampleDE": "Das Ergebnis ist sehr gut.",
+      "exampleIT": "Il risultato è molto buono."
+    },
+    {
+      "german": "die Aufgabe",
+      "italian": "il compito / il task",
+      "exampleDE": "Jeder hat seine Aufgabe.",
+      "exampleIT": "Ognuno ha il suo compito."
+    },
+    {
+      "german": "die Frist",
+      "italian": "il termine / la scadenza",
+      "exampleDE": "Die Frist läuft morgen ab.",
+      "exampleIT": "Il termine scade domani."
+    },
+    {
+      "german": "der Fortschritt",
+      "italian": "il progresso",
+      "exampleDE": "Der Fortschritt ist sichtbar.",
+      "exampleIT": "Il progresso è visibile."
+    },
+    {
+      "german": "die Genehmigung",
+      "italian": "l'approvazione",
+      "exampleDE": "Wir brauchen die Genehmigung.",
+      "exampleIT": "Abbiamo bisogno dell'approvazione."
+    },
+    {
+      "german": "der Vorschlag",
+      "italian": "la proposta",
+      "exampleDE": "Der Vorschlag wurde angenommen.",
+      "exampleIT": "La proposta è stata accettata."
+    },
+    {
+      "german": "die Zusammenarbeit",
+      "italian": "la collaborazione",
+      "exampleDE": "Die Zusammenarbeit funktioniert gut.",
+      "exampleIT": "La collaborazione funziona bene."
+    },
+    {
+      "german": "umsetzen",
+      "italian": "implementare / realizzare",
+      "exampleDE": "Wir setzen den Plan um.",
+      "exampleIT": "Implementiamo il piano."
+    },
+    {
+      "german": "die Abnahme",
+      "italian": "l'accettazione / il collaudo",
+      "exampleDE": "Die Abnahme ist für Freitag geplant.",
+      "exampleIT": "Il collaudo è previsto per venerdì."
+    },
+    {
+      "german": "der Meilenstein",
+      "italian": "la milestone / il traguardo",
+      "exampleDE": "Der erste Meilenstein ist erreicht.",
+      "exampleIT": "La prima milestone è raggiunta."
+    },
+    {
+      "german": "die Rückmeldung",
+      "italian": "il feedback / il riscontro",
+      "exampleDE": "Ich brauche Ihre Rückmeldung.",
+      "exampleIT": "Ho bisogno del suo feedback."
+    },
+    {
+      "german": "der Stakeholder",
+      "italian": "lo stakeholder / la parte interessata",
+      "exampleDE": "Die Stakeholder sind zufrieden.",
+      "exampleIT": "Gli stakeholder sono soddisfatti."
+    },
+    {
+      "german": "die Schätzung",
+      "italian": "la stima",
+      "exampleDE": "Die Schätzung war korrekt.",
+      "exampleIT": "La stima era corretta."
+    },
+    {
+      "german": "das Risiko",
+      "italian": "il rischio",
+      "exampleDE": "Das Risiko ist hoch.",
+      "exampleIT": "Il rischio è alto."
+    },
+    {
+      "german": "die Ressource",
+      "italian": "la risorsa",
+      "exampleDE": "Wir haben nicht genug Ressourcen.",
+      "exampleIT": "Non abbiamo abbastanza risorse."
+    },
+    {
+      "german": "abstimmen",
+      "italian": "coordinarsi / concordare",
+      "exampleDE": "Wir müssen uns abstimmen.",
+      "exampleIT": "Dobbiamo coordinarci."
+    },
+    {
+      "german": "die Lieferung",
+      "italian": "la consegna / il deliverable",
+      "exampleDE": "Die Lieferung ist pünktlich.",
+      "exampleIT": "La consegna è puntuale."
+    },
+    {
+      "german": "der Projektplan",
+      "italian": "il piano di progetto",
+      "exampleDE": "Der Projektplan muss aktualisiert werden.",
+      "exampleIT": "Il piano di progetto deve essere aggiornato."
+    },
+    {
+      "german": "die Qualitätssicherung",
+      "italian": "la garanzia di qualità / QA",
+      "exampleDE": "Die Qualitätssicherung ist wichtig.",
+      "exampleIT": "La garanzia di qualità è importante."
+    },
+    {
+      "german": "beauftragen",
+      "italian": "incaricare / commissionare",
+      "exampleDE": "Wir beauftragen einen Berater.",
+      "exampleIT": "Incarichiamo un consulente."
+    },
+    {
+      "german": "die Verbesserung",
+      "italian": "il miglioramento",
+      "exampleDE": "Die Verbesserung ist notwendig.",
+      "exampleIT": "Il miglioramento è necessario."
+    }
+  ]
+}

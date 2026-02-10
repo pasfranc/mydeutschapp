@@ -1,0 +1,112 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    -webkit-tap-highlight-color: transparent;
+    -webkit-text-size-adjust: 100%;
+    overscroll-behavior: none;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+      sans-serif;
+    color: #2d3748;
+    background-color: #f7fafc;
+    min-height: 100dvh;
+    overscroll-behavior: none;
+  }
+
+  input,
+  textarea,
+  button {
+    font-family: inherit;
+  }
+
+  /* Prevent zoom on inputs on iOS */
+  input[type='text'],
+  input[type='email'],
+  textarea {
+    font-size: 16px;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-primary text-white font-semibold rounded-full px-8 py-4 text-lg
+      active:scale-95 transition-transform duration-150;
+  }
+
+  .btn-secondary {
+    @apply border-2 border-primary text-primary font-semibold rounded-full px-8 py-4 text-lg
+      active:scale-95 transition-transform duration-150;
+  }
+
+  .btn-success {
+    @apply bg-success text-white font-semibold rounded-full px-6 py-3
+      active:scale-95 transition-transform duration-150;
+  }
+
+  .btn-warning {
+    @apply bg-warning text-dark font-semibold rounded-full px-6 py-3
+      active:scale-95 transition-transform duration-150;
+  }
+
+  .btn-error {
+    @apply bg-error text-white font-semibold rounded-full px-6 py-3
+      active:scale-95 transition-transform duration-150;
+  }
+
+  .card {
+    @apply bg-white rounded-xl shadow-md p-4;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+  }
+
+  .safe-area-top {
+    padding-top: env(safe-area-inset-top);
+  }
+
+  .safe-area-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  .gradient-bg {
+    background: linear-gradient(135deg, #ff6b6b 0%, #4ecdc4 100%);
+  }
+}
+
+@layer utilities {
+  .perspective-1000 {
+    perspective: 1000px;
+  }
+
+  .backface-hidden {
+    backface-visibility: hidden;
+  }
+
+  .rotate-y-180 {
+    transform: rotateY(180deg);
+  }
+}
+
+/* Confetti animation */
+@keyframes confetti-fall {
+  0% {
+    transform: translateY(-100%) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(100vh) rotate(720deg);
+    opacity: 0;
+  }
+}
+
+.confetti-piece {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  top: -10px;
+  border-radius: 2px;
+  animation: confetti-fall 2.5s ease-out forwards;
+}

@@ -1,0 +1,208 @@
+import { useState, useCallback, useEffect } from 'react';
+import { AuthProvider, useAuth } from './context/AuthContext';
+import AuthGuard from './components/auth/AuthGuard';
+import DeckList from './components/DeckList';
+import DeckImport from './components/DeckImport';
+import StudyOptions from './components/StudyOptions';
+import FlashcardMode from './components/FlashcardMode';
+import TranslationMode from './components/TranslationMode';
+import CompleteScreen from './components/CompleteScreen';
+import { useDeckCards, useProgress } from './hooks/useFirestore';
+import { getCardsToReview, DEFAULT_PROGRESS } from './utils/srs';
+
+/**
+ * App screens:
+ * - decks: deck list (home)
+ * - import: import new deck
+ * - options: study options for a deck
+ * - study: flashcard or translation mode
+ * - complete: session complete
+ */
+
+function StudySession({ deck, mode, direction, onComplete, onBack }) {
+  const { cards, loading: cardsLoading } = useDeckCards(deck.id);
+  const {
+    progress,
+    loading: progressLoading,
+    updateProgress,
+  } = useProgress(deck.id, mode, direction);
+
+  const [studyCards, setStudyCards] = useState(null);
+  const [progressMap, setProgressMap] = useState({});
+
+  useEffect(() => {
+    if (cardsLoading || progressLoading) return;
+
+    // Build progress map
+    const pMap = {};
+    progress.forEach((p) => {
+      pMap[p.cardId] = p;
+    });
+    setProgressMap(pMap);
+
+    // Determine which cards to study
+    // Cards with no progress = new cards (always include)
+    // Cards with progress = only if due for review
+    const now = new Date();
+    const toStudy = cards.filter((card) => {
+      const p = pMap[card.id];
+      if (!p) return true; // New card
+      return new Date(p.nextReview) <= now;
+    });
+
+    // If no cards due, show all cards (fresh start)
+    setStudyCards(toStudy.length > 0 ? toStudy : cards);
+  }, [cards, progress, cardsLoading, progressLoading]);
+
+  const handleUpdateProgress = useCallback(
+    (cardId, data) => {
+      setProgressMap((prev) => ({ ...prev, [cardId]: data }));
+      updateProgress(cardId, data);
+    },
+    [updateProgress]
+  );
+
+  if (cardsLoading || progressLoading || !studyCards) {
+    return (
+      <div className="min-h-dvh flex items-center justify-center">
+        <div className="text-dark/40 text-lg">Preparazione carte...</div>
+      </div>
+    );
+  }
+
+  if (studyCards.length === 0) {
+    return (
+      <div className="min-h-dvh flex flex-col items-center justify-center p-4">
+        <div className="text-5xl mb-4">✅</div>
+        <h2 className="text-xl font-bold text-dark mb-2">Tutto fatto!</h2>
+        <p className="text-dark/50 text-center mb-6">
+          Non ci sono carte da rivedere ora. Torna piu tardi!
+        </p>
+        <button onClick={onBack} className="btn-primary">
+          Torna ai mazzi
+        </button>
+      </div>
+    );
+  }
+
+  if (mode === 'flashcard') {
+    return (
+      <FlashcardMode
+        cards={studyCards}
+        direction={direction}
+        progressMap={progressMap}
+        onUpdateProgress={handleUpdateProgress}
+        onComplete={onComplete}
+      />
+    );
+  }
+
+  return (
+    <TranslationMode
+      cards={studyCards}
+      direction={direction}
+      progressMap={progressMap}
+      onUpdateProgress={handleUpdateProgress}
+      onComplete={onComplete}
+    />
+  );
+}
+
+function AppContent() {
+  const [screen, setScreen] = useState('decks');
+  const [selectedDeck, setSelectedDeck] = useState(null);
+  const [studyMode, setStudyMode] = useState(null);
+  const [studyDirection, setStudyDirection] = useState(null);
+  const [completionStats, setCompletionStats] = useState(null);
+
+  const handleSelectDeck = useCallback((deck) => {
+    setSelectedDeck(deck);
+    setScreen('options');
+  }, []);
+
+  const handleStartStudy = useCallback((mode, direction) => {
+    setStudyMode(mode);
+    setStudyDirection(direction);
+    setScreen('study');
+  }, []);
+
+  const handleComplete = useCallback((stats) => {
+    setCompletionStats(stats);
+    setScreen('complete');
+  }, []);
+
+  const handleBackToDecks = useCallback(() => {
+    setScreen('decks');
+    setSelectedDeck(null);
+    setStudyMode(null);
+    setStudyDirection(null);
+    setCompletionStats(null);
+  }, []);
+
+  const handleStudyAgain = useCallback(() => {
+    setScreen('study');
+    setCompletionStats(null);
+  }, []);
+
+  switch (screen) {
+    case 'decks':
+      return (
+        <DeckList
+          onSelectDeck={handleSelectDeck}
+          onImport={() => setScreen('import')}
+        />
+      );
+
+    case 'import':
+      return (
+        <DeckImport
+          onBack={handleBackToDecks}
+          onImported={() => {
+            setScreen('decks');
+          }}
+        />
+      );
+
+    case 'options':
+      return (
+        <StudyOptions
+          deck={selectedDeck}
+          onStart={handleStartStudy}
+          onBack={handleBackToDecks}
+        />
+      );
+
+    case 'study':
+      return (
+        <StudySession
+          deck={selectedDeck}
+          mode={studyMode}
+          direction={studyDirection}
+          onComplete={handleComplete}
+          onBack={handleBackToDecks}
+        />
+      );
+
+    case 'complete':
+      return (
+        <CompleteScreen
+          stats={completionStats}
+          onStudyAgain={handleStudyAgain}
+          onBackToDecks={handleBackToDecks}
+        />
+      );
+
+    default:
+      return null;
+  }
+}
+
+export default function App() {
+  return (
+    <AuthProvider>
+      <AuthGuard>
+        <AppContent />
+      </AuthGuard>
+    </AuthProvider>
+  );
+}
