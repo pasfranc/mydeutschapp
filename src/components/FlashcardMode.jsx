@@ -11,6 +11,7 @@ export default function FlashcardMode({
 }) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [flipped, setFlipped] = useState(false);
+  const [showHint, setShowHint] = useState(false);
   const [sessionStats, setSessionStats] = useState({
     total: 0,
     correct: 0,
@@ -55,6 +56,7 @@ export default function FlashcardMode({
       } else {
         setCurrentIndex((i) => i + 1);
         setFlipped(false);
+        setShowHint(false);
       }
     },
     [card, progressMap, onUpdateProgress, currentIndex, total, onComplete, sessionStats]
@@ -117,7 +119,23 @@ export default function FlashcardMode({
               <p className="text-2xl md:text-3xl font-bold text-dark leading-relaxed">
                 {front}
               </p>
-              <p className="text-sm text-dark/30 mt-8">
+              {showHint && exampleFront && (
+                <p className="text-base text-secondary italic mt-4">
+                  {exampleFront}
+                </p>
+              )}
+              {!showHint && exampleFront && (
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setShowHint(true);
+                  }}
+                  className="text-sm text-secondary/70 mt-6 font-medium active:scale-95 transition-transform"
+                >
+                  Use it in a phrase
+                </button>
+              )}
+              <p className="text-sm text-dark/30 mt-4">
                 Tap to reveal
               </p>
             </div>
