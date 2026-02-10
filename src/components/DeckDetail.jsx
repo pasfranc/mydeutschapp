@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../utils/firebase';
-import { updateCard, deleteCard, deleteDeck } from '../hooks/useFirestore';
+import { addCard, updateCard, deleteCard, deleteDeck } from '../hooks/useFirestore';
 
 export default function DeckDetail({ deck, onBack, onDeckDeleted }) {
   const [cards, setCards] = useState([]);
@@ -9,6 +9,8 @@ export default function DeckDetail({ deck, onBack, onDeckDeleted }) {
   const [editingId, setEditingId] = useState(null);
   const [editForm, setEditForm] = useState({});
   const [saving, setSaving] = useState(false);
+  const [adding, setAdding] = useState(false);
+  const [addForm, setAddForm] = useState({ german: '', italian: '', exampleDE: '', exampleIT: '' });
   const [showDeleteDeck, setShowDeleteDeck] = useState(false);
   const [deletingDeck, setDeletingDeck] = useState(false);
 
@@ -68,6 +70,25 @@ export default function DeckDetail({ deck, onBack, onDeckDeleted }) {
     } catch (err) {
       console.error('Error deleting card:', err);
     }
+  };
+
+  const handleAddCard = async () => {
+    setSaving(true);
+    try {
+      const id = await addCard(deck.id, addForm);
+      setCards((prev) => [...prev, { id, ...addForm }]);
+      setAdding(false);
+      setAddForm({ german: '', italian: '', exampleDE: '', exampleIT: '' });
+    } catch (err) {
+      console.error('Error adding card:', err);
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleCancelAdd = () => {
+    setAdding(false);
+    setAddForm({ german: '', italian: '', exampleDE: '', exampleIT: '' });
   };
 
   const handleDeleteDeck = async () => {
@@ -185,10 +206,77 @@ export default function DeckDetail({ deck, onBack, onDeckDeleted }) {
           </div>
         ))}
 
-        {cards.length === 0 && (
+        {cards.length === 0 && !adding && (
           <div className="text-center py-12 text-dark/40">
             <p className="text-lg">No cards in this deck</p>
           </div>
+        )}
+
+        {/* Add card */}
+        {adding ? (
+          <div className="card space-y-3">
+            <div>
+              <label className="text-xs font-medium text-dark/40 block mb-1">German</label>
+              <input
+                type="text"
+                value={addForm.german}
+                onChange={(e) => setAddForm({ ...addForm, german: e.target.value })}
+                className="w-full px-3 py-2 rounded-lg border-2 border-gray-200 focus:border-secondary focus:outline-none text-base"
+                autoFocus
+              />
+            </div>
+            <div>
+              <label className="text-xs font-medium text-dark/40 block mb-1">Italian</label>
+              <input
+                type="text"
+                value={addForm.italian}
+                onChange={(e) => setAddForm({ ...addForm, italian: e.target.value })}
+                className="w-full px-3 py-2 rounded-lg border-2 border-gray-200 focus:border-secondary focus:outline-none text-base"
+              />
+            </div>
+            <div>
+              <label className="text-xs font-medium text-dark/40 block mb-1">Example (DE)</label>
+              <input
+                type="text"
+                value={addForm.exampleDE}
+                onChange={(e) => setAddForm({ ...addForm, exampleDE: e.target.value })}
+                className="w-full px-3 py-2 rounded-lg border-2 border-gray-200 focus:border-secondary focus:outline-none text-base"
+              />
+            </div>
+            <div>
+              <label className="text-xs font-medium text-dark/40 block mb-1">Example (IT)</label>
+              <input
+                type="text"
+                value={addForm.exampleIT}
+                onChange={(e) => setAddForm({ ...addForm, exampleIT: e.target.value })}
+                className="w-full px-3 py-2 rounded-lg border-2 border-gray-200 focus:border-secondary focus:outline-none text-base"
+              />
+            </div>
+            <div className="flex gap-2 pt-1">
+              <button
+                onClick={handleAddCard}
+                disabled={saving || !addForm.german.trim() || !addForm.italian.trim()}
+                className="flex-1 bg-secondary text-white font-semibold rounded-lg py-2 text-sm active:scale-95 transition-transform disabled:opacity-50"
+              >
+                {saving ? 'Saving...' : 'Save'}
+              </button>
+              <button
+                onClick={handleCancelAdd}
+                className="flex-1 bg-gray-100 text-dark/60 font-semibold rounded-lg py-2 text-sm active:scale-95 transition-transform"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        ) : (
+          <button
+            onClick={() => setAdding(true)}
+            className="w-full border-2 border-dashed border-secondary/50 rounded-xl p-4
+              text-secondary font-semibold text-base text-center
+              active:bg-secondary/5 transition-colors"
+          >
+            + Add card
+          </button>
         )}
       </div>
 
