@@ -7,6 +7,8 @@ import StudyOptions from './components/StudyOptions';
 import FlashcardMode from './components/FlashcardMode';
 import TranslationMode from './components/TranslationMode';
 import CompleteScreen from './components/CompleteScreen';
+import DeckDetail from './components/DeckDetail';
+import DeckStats from './components/DeckStats';
 import { useDeckCards, useProgress } from './hooks/useFirestore';
 import { getCardsToReview, DEFAULT_PROGRESS } from './utils/srs';
 
@@ -20,9 +22,11 @@ const DEFAULT_TARGET = { code: 'it', name: 'Italiano', flag: '🇮🇹' };
  * - options: study options for a deck
  * - study: flashcard or translation mode
  * - complete: session complete
+ * - edit: deck detail (view/edit/delete cards)
+ * - stats: deck statistics
  */
 
-function StudySession({ deck, mode, direction, sessionSize, onComplete, onBack }) {
+function StudySession({ deck, mode, direction, sessionSize, filterCardIds, onComplete, onBack }) {
   const { cards, loading: cardsLoading } = useDeckCards(deck.id);
   const {
     progress,
@@ -46,6 +50,13 @@ function StudySession({ deck, mode, direction, sessionSize, onComplete, onBack }
     });
     setProgressMap(pMap);
 
+    // If filtering by specific card IDs (e.g. practice hardest)
+    if (filterCardIds && filterCardIds.length > 0) {
+      const filtered = cards.filter((c) => filterCardIds.includes(c.id));
+      setStudyCards(filtered.length > 0 ? filtered : cards.slice(0, sessionSize));
+      return;
+    }
+
     // Determine which cards to study
     const now = new Date();
     let toStudy = cards.filter((card) => {
@@ -63,7 +74,7 @@ function StudySession({ deck, mode, direction, sessionSize, onComplete, onBack }
       session.push(toStudy[i % toStudy.length]);
     }
     setStudyCards(session);
-  }, [cards, progress, cardsLoading, progressLoading, sessionSize]);
+  }, [cards, progress, cardsLoading, progressLoading, sessionSize, filterCardIds]);
 
   const handleUpdateProgress = useCallback(
     (cardId, data) => {
@@ -130,10 +141,29 @@ function AppContent() {
   const [studyDirection, setStudyDirection] = useState(null);
   const [studySize, setStudySize] = useState(20);
   const [completionStats, setCompletionStats] = useState(null);
+  const [filterCardIds, setFilterCardIds] = useState(null);
 
   const handleSelectDeck = useCallback((deck) => {
     setSelectedDeck(deck);
     setScreen('options');
+  }, []);
+
+  const handleEditDeck = useCallback((deck) => {
+    setSelectedDeck(deck);
+    setScreen('edit');
+  }, []);
+
+  const handleStats = useCallback((deck) => {
+    setSelectedDeck(deck);
+    setScreen('stats');
+  }, []);
+
+  const handlePracticeHardest = useCallback((cardIds) => {
+    setStudyMode('flashcard');
+    setStudyDirection('de-it');
+    setStudySize(cardIds.length);
+    setFilterCardIds(cardIds);
+    setScreen('study');
   }, []);
 
   const handleStartStudy = useCallback((mode, direction, sessionSize) => {
@@ -155,6 +185,7 @@ function AppContent() {
     setStudyDirection(null);
     setStudySize(20);
     setCompletionStats(null);
+    setFilterCardIds(null);
   }, []);
 
   const handleStudyAgain = useCallback(() => {
@@ -168,6 +199,8 @@ function AppContent() {
         <DeckList
           onSelectDeck={handleSelectDeck}
           onImport={() => setScreen('import')}
+          onEditDeck={handleEditDeck}
+          onStats={handleStats}
         />
       );
 
@@ -197,8 +230,27 @@ function AppContent() {
           mode={studyMode}
           direction={studyDirection}
           sessionSize={studySize}
+          filterCardIds={filterCardIds}
           onComplete={handleComplete}
           onBack={handleBackToDecks}
+        />
+      );
+
+    case 'stats':
+      return (
+        <DeckStats
+          deck={selectedDeck}
+          onBack={handleBackToDecks}
+          onPracticeHardest={handlePracticeHardest}
+        />
+      );
+
+    case 'edit':
+      return (
+        <DeckDetail
+          deck={selectedDeck}
+          onBack={handleBackToDecks}
+          onDeckDeleted={handleBackToDecks}
         />
       );
 

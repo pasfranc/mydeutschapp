@@ -5,7 +5,7 @@ import { useAuth } from '../context/AuthContext';
 import { useDecks } from '../hooks/useFirestore';
 import { logout } from '../utils/auth';
 
-export default function DeckList({ onSelectDeck, onImport, onSettings }) {
+export default function DeckList({ onSelectDeck, onImport, onEditDeck, onStats }) {
   const { user } = useAuth();
   const { decks, loading, refetch } = useDecks();
   const [deckStats, setDeckStats] = useState({});
@@ -47,6 +47,7 @@ export default function DeckList({ onSelectDeck, onImport, onSettings }) {
           stats[deck.id] = {
             flashcardDue: fcDue + fcNew,
             translationDue: trDue + trNew,
+            hasProgress: fcSnap.docs.length > 0 || trSnap.docs.length > 0,
           };
         } catch (err) {
           console.error('Error fetching stats:', err);
@@ -97,7 +98,15 @@ export default function DeckList({ onSelectDeck, onImport, onSettings }) {
               key={deck.id}
               className="card"
             >
-              <h2 className="text-xl font-bold text-dark mb-3">{deck.name}</h2>
+              <div className="flex items-center justify-between mb-3">
+                <h2 className="text-xl font-bold text-dark">{deck.name}</h2>
+                <button
+                  onClick={() => onEditDeck(deck)}
+                  className="text-dark/30 hover:text-dark/60 text-sm font-medium px-2 py-1 active:scale-95 transition-all"
+                >
+                  Edit
+                </button>
+              </div>
 
               <div className="space-y-1.5 mb-4 text-base">
                 <p className="text-dark/60">
@@ -114,6 +123,15 @@ export default function DeckList({ onSelectDeck, onImport, onSettings }) {
                   </p>
                 )}
               </div>
+
+              {stats.hasProgress && (
+                <button
+                  onClick={() => onStats(deck)}
+                  className="w-full text-secondary font-semibold text-base py-2 mb-2 active:scale-95 transition-transform"
+                >
+                  Stats
+                </button>
+              )}
 
               <button
                 onClick={() => onSelectDeck(deck)}
