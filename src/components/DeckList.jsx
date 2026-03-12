@@ -84,7 +84,7 @@ export default function DeckList({ onSelectDeck, onImport, onEditDeck, onStats }
           Logout
         </button>
         <h1 className="text-lg font-bold text-dark flex items-center gap-1">
-          🇩🇪 Decks
+          📚 Decks
         </h1>
         <div className="w-10" />
       </div>

@@ -12,6 +12,9 @@ import DeckStats from './components/DeckStats';
 import { useDeckCards, useProgress } from './hooks/useFirestore';
 import { getCardsToReview, DEFAULT_PROGRESS } from './utils/srs';
 
+const DEFAULT_SOURCE = { code: 'de', name: 'Deutsch', flag: '🇩🇪' };
+const DEFAULT_TARGET = { code: 'it', name: 'Italiano', flag: '🇮🇹' };
+
 /**
  * App screens:
  * - decks: deck list (home)
@@ -33,6 +36,9 @@ function StudySession({ deck, mode, direction, sessionSize, filterCardIds, onCom
 
   const [studyCards, setStudyCards] = useState(null);
   const [progressMap, setProgressMap] = useState({});
+
+  const sourceLang = deck.sourceLang || DEFAULT_SOURCE;
+  const targetLang = deck.targetLang || DEFAULT_TARGET;
 
   useEffect(() => {
     if (cardsLoading || progressLoading) return;
@@ -106,6 +112,8 @@ function StudySession({ deck, mode, direction, sessionSize, filterCardIds, onCom
       <FlashcardMode
         cards={studyCards}
         direction={direction}
+        sourceLang={sourceLang}
+        targetLang={targetLang}
         progressMap={progressMap}
         onUpdateProgress={handleUpdateProgress}
         onComplete={onComplete}
@@ -117,6 +125,8 @@ function StudySession({ deck, mode, direction, sessionSize, filterCardIds, onCom
     <TranslationMode
       cards={studyCards}
       direction={direction}
+      sourceLang={sourceLang}
+      targetLang={targetLang}
       progressMap={progressMap}
       onUpdateProgress={handleUpdateProgress}
       onComplete={onComplete}

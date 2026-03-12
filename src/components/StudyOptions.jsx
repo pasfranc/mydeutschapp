@@ -1,10 +1,16 @@
 import { useState } from 'react';
 
+const DEFAULT_SOURCE = { code: 'de', name: 'Deutsch', flag: '🇩🇪' };
+const DEFAULT_TARGET = { code: 'it', name: 'Italiano', flag: '🇮🇹' };
+
 export default function StudyOptions({ deck, onStart, onBack }) {
   const [mode, setMode] = useState('flashcard');
-  const [direction, setDirection] = useState('de-it');
+  const [direction, setDirection] = useState('source-target');
   const [size, setSize] = useState(20);
   const [customSize, setCustomSize] = useState('');
+
+  const sourceLang = deck.sourceLang || DEFAULT_SOURCE;
+  const targetLang = deck.targetLang || DEFAULT_TARGET;
 
   const sizes = [
     { label: 'Small', value: 20 },
@@ -103,9 +109,9 @@ export default function StudyOptions({ deck, onStart, onBack }) {
           </h2>
           <div className="space-y-3">
             <button
-              onClick={() => setDirection('de-it')}
+              onClick={() => setDirection('source-target')}
               className={`w-full text-left p-4 rounded-xl border-2 transition-colors ${
-                direction === 'de-it'
+                direction === 'source-target'
                   ? 'border-secondary bg-secondary/5'
                   : 'border-gray-200 bg-white'
               }`}
@@ -113,25 +119,25 @@ export default function StudyOptions({ deck, onStart, onBack }) {
               <div className="flex items-center gap-3">
                 <div
                   className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
-                    direction === 'de-it'
+                    direction === 'source-target'
                       ? 'border-secondary'
                       : 'border-gray-300'
                   }`}
                 >
-                  {direction === 'de-it' && (
+                  {direction === 'source-target' && (
                     <div className="w-3 h-3 rounded-full bg-secondary" />
                   )}
                 </div>
                 <span className="font-semibold text-dark text-base">
-                  🇩🇪 → 🇮🇹
+                  {sourceLang.flag} → {targetLang.flag}
                 </span>
               </div>
             </button>
 
             <button
-              onClick={() => setDirection('it-de')}
+              onClick={() => setDirection('target-source')}
               className={`w-full text-left p-4 rounded-xl border-2 transition-colors ${
-                direction === 'it-de'
+                direction === 'target-source'
                   ? 'border-secondary bg-secondary/5'
                   : 'border-gray-200 bg-white'
               }`}
@@ -139,17 +145,17 @@ export default function StudyOptions({ deck, onStart, onBack }) {
               <div className="flex items-center gap-3">
                 <div
                   className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
-                    direction === 'it-de'
+                    direction === 'target-source'
                       ? 'border-secondary'
                       : 'border-gray-300'
                   }`}
                 >
-                  {direction === 'it-de' && (
+                  {direction === 'target-source' && (
                     <div className="w-3 h-3 rounded-full bg-secondary" />
                   )}
                 </div>
                 <span className="font-semibold text-dark text-base">
-                  🇮🇹 → 🇩🇪
+                  {targetLang.flag} → {sourceLang.flag}
                 </span>
               </div>
             </button>

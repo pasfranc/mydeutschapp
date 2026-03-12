@@ -5,7 +5,6 @@ import {
   getDocs,
   setDoc,
   updateDoc,
-  deleteDoc,
   addDoc,
   query,
   where,
@@ -29,6 +28,21 @@ export function useDecks() {
       );
       const snapshot = await getDocs(q);
       const data = snapshot.docs.map((d) => ({ id: d.id, ...d.data() }));
+
+      // Migrate decks missing sourceLang/targetLang (old format)
+      const DEFAULT_SOURCE = { code: 'de', name: 'Deutsch', flag: '🇩🇪' };
+      const DEFAULT_TARGET = { code: 'it', name: 'Italiano', flag: '🇮🇹' };
+      for (const deck of data) {
+        if (!deck.sourceLang || !deck.targetLang) {
+          deck.sourceLang = DEFAULT_SOURCE;
+          deck.targetLang = DEFAULT_TARGET;
+          updateDoc(doc(db, 'decks', deck.id), {
+            sourceLang: DEFAULT_SOURCE,
+            targetLang: DEFAULT_TARGET,
+          }).catch((err) => console.error('Deck migration error:', err));
+        }
+      }
+
       setDecks(data);
     } catch (err) {
       console.error('Error fetching decks:', err);
@@ -56,7 +70,41 @@ export function useDeckCards(deckId) {
         const snapshot = await getDocs(
           collection(db, 'decks', deckId, 'cards')
         );
-        setCards(snapshot.docs.map((d) => ({ id: d.id, ...d.data() })));
+        const migrateBatch = writeBatch(db);
+        let hasMigrations = false;
+
+        const normalized = snapshot.docs.map((d) => {
+          const data = d.data();
+          const isOldFormat = !data.front && (data.german || data.italian);
+
+          const card = {
+            id: d.id,
+            front: data.front || data.german || '',
+            back: data.back || data.italian || '',
+            exampleFront: data.exampleFront || data.exampleDE || '',
+            exampleBack: data.exampleBack || data.exampleIT || '',
+          };
+
+          if (isOldFormat) {
+            hasMigrations = true;
+            migrateBatch.update(doc(db, 'decks', deckId, 'cards', d.id), {
+              front: card.front,
+              back: card.back,
+              exampleFront: card.exampleFront,
+              exampleBack: card.exampleBack,
+            });
+          }
+
+          return card;
+        });
+
+        if (hasMigrations) {
+          migrateBatch.commit().catch((err) =>
+            console.error('Card migration error:', err)
+          );
+        }
+
+        setCards(normalized);
       } catch (err) {
         console.error('Error fetching cards:', err);
       } finally {
@@ -117,49 +165,13 @@ export function useProgress(deckId, mode, direction) {
   return { progress, loading, updateProgress, refetch: fetchProgress };
 }
 
-export async function addCard(deckId, data) {
-  const cardRef = doc(collection(db, 'decks', deckId, 'cards'));
-  await setDoc(cardRef, data);
-  const snapshot = await getDocs(collection(db, 'decks', deckId, 'cards'));
-  await updateDoc(doc(db, 'decks', deckId), { totalCards: snapshot.size });
-  return cardRef.id;
-}
-
-export async function updateCard(deckId, cardId, data) {
-  await updateDoc(doc(db, 'decks', deckId, 'cards', cardId), data);
-}
-
-export async function deleteCard(deckId, cardId) {
-  await deleteDoc(doc(db, 'decks', deckId, 'cards', cardId));
-  // Update totalCards count
-  const snapshot = await getDocs(collection(db, 'decks', deckId, 'cards'));
-  await updateDoc(doc(db, 'decks', deckId), { totalCards: snapshot.size });
-}
-
-export async function deleteDeck(deckId) {
-  // Delete all cards
-  const cardsSnap = await getDocs(collection(db, 'decks', deckId, 'cards'));
-  const batch = writeBatch(db);
-  cardsSnap.docs.forEach((d) => batch.delete(d.ref));
-  batch.delete(doc(db, 'decks', deckId));
-  await batch.commit();
-
-  // Delete all progress for this deck
-  const progressSnap = await getDocs(
-    query(collection(db, 'progress'), where('deckId', '==', deckId))
-  );
-  if (progressSnap.size > 0) {
-    const pBatch = writeBatch(db);
-    progressSnap.docs.forEach((d) => pBatch.delete(d.ref));
-    await pBatch.commit();
-  }
-}
-
-export async function importDeck(userId, name, description, cards) {
+export async function importDeck(userId, name, description, cards, sourceLang, targetLang) {
   const deckRef = await addDoc(collection(db, 'decks'), {
     userId,
     name,
     description,
+    sourceLang: sourceLang || { code: 'de', name: 'Deutsch', flag: '🇩🇪' },
+    targetLang: targetLang || { code: 'it', name: 'Italiano', flag: '🇮🇹' },
     totalCards: cards.length,
     createdAt: new Date().toISOString(),
   });
