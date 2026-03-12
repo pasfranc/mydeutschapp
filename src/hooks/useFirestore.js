@@ -117,6 +117,12 @@ export function useDeckCards(deckId) {
   return { cards, loading };
 }
 
+// Map old direction values to new ones
+const DIRECTION_MIGRATION = {
+  'de-it': 'source-target',
+  'it-de': 'target-source',
+};
+
 export function useProgress(deckId, mode, direction) {
   const { user } = useAuth();
   const [progress, setProgress] = useState([]);
@@ -126,6 +132,7 @@ export function useProgress(deckId, mode, direction) {
     if (!user || !deckId) return;
     setLoading(true);
     try {
+      // Fetch with new direction
       const q = query(
         collection(db, 'progress'),
         where('userId', '==', user.uid),
@@ -134,7 +141,44 @@ export function useProgress(deckId, mode, direction) {
         where('direction', '==', direction)
       );
       const snapshot = await getDocs(q);
-      setProgress(snapshot.docs.map((d) => ({ id: d.id, ...d.data() })));
+      let results = snapshot.docs.map((d) => ({ id: d.id, ...d.data() }));
+
+      // If empty, check for old-format direction and migrate
+      if (results.length === 0) {
+        const oldDirection = Object.entries(DIRECTION_MIGRATION)
+          .find(([, v]) => v === direction)?.[0];
+
+        if (oldDirection) {
+          const oldQ = query(
+            collection(db, 'progress'),
+            where('userId', '==', user.uid),
+            where('deckId', '==', deckId),
+            where('mode', '==', mode),
+            where('direction', '==', oldDirection)
+          );
+          const oldSnapshot = await getDocs(oldQ);
+
+          if (oldSnapshot.docs.length > 0) {
+            const batch = writeBatch(db);
+            results = oldSnapshot.docs.map((d) => {
+              const data = d.data();
+              // Create new doc with new direction, delete old
+              const newDocId = `${user.uid}_${deckId}_${data.cardId}_${mode}_${direction}`;
+              batch.set(doc(db, 'progress', newDocId), {
+                ...data,
+                direction,
+              });
+              batch.delete(d.ref);
+              return { id: newDocId, ...data, direction };
+            });
+            batch.commit().catch((err) =>
+              console.error('Progress migration error:', err)
+            );
+          }
+        }
+      }
+
+      setProgress(results);
     } catch (err) {
       console.error('Error fetching progress:', err);
     } finally {
