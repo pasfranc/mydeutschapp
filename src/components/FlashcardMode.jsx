@@ -5,6 +5,8 @@ import { calculateNextReview, DEFAULT_PROGRESS } from '../utils/srs';
 export default function FlashcardMode({
   cards,
   direction,
+  sourceLang,
+  targetLang,
   progressMap,
   onUpdateProgress,
   onComplete,
@@ -21,13 +23,16 @@ export default function FlashcardMode({
   const total = cards.length;
 
   const front =
-    direction === 'de-it' ? card?.german : card?.italian;
+    direction === 'source-target' ? card?.front : card?.back;
   const back =
-    direction === 'de-it' ? card?.italian : card?.german;
+    direction === 'source-target' ? card?.back : card?.front;
   const exampleFront =
-    direction === 'de-it' ? card?.exampleDE : card?.exampleIT;
+    direction === 'source-target' ? card?.exampleFront : card?.exampleBack;
   const exampleBack =
-    direction === 'de-it' ? card?.exampleIT : card?.exampleDE;
+    direction === 'source-target' ? card?.exampleBack : card?.exampleFront;
+
+  const frontLang = direction === 'source-target' ? sourceLang : targetLang;
+  const backLang = direction === 'source-target' ? targetLang : sourceLang;
 
   const handleAnswer = useCallback(
     (quality) => {
@@ -131,10 +136,10 @@ export default function FlashcardMode({
               {exampleFront && (
                 <div className="pt-2 text-left">
                   <p className="text-base text-secondary italic">
-                    🇩🇪 {direction === 'de-it' ? exampleFront : exampleBack}
+                    {frontLang.flag} {exampleFront}
                   </p>
                   <p className="text-base text-dark/50 italic mt-1">
-                    🇮🇹 {direction === 'de-it' ? exampleBack : exampleFront}
+                    {backLang.flag} {exampleBack}
                   </p>
                 </div>
               )}

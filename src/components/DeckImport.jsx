@@ -9,6 +9,14 @@ export default function DeckImport({ onBack, onImported }) {
   const [error, setError] = useState('');
   const [fileName, setFileName] = useState('');
 
+  // Normalize cards from old format (german/italian) or new format (front/back)
+  const normalizeCard = (c) => ({
+    front: c.front || c.german || '',
+    back: c.back || c.italian || '',
+    exampleFront: c.exampleFront || c.exampleDE || '',
+    exampleBack: c.exampleBack || c.exampleIT || '',
+  });
+
   const handleFile = async (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -26,10 +34,10 @@ export default function DeckImport({ onBack, onImported }) {
         throw new Error('Invalid format. "name" and "cards" are required.');
       }
 
-      // Validate cards
-      const validCards = data.cards.filter(
-        (c) => c.german && c.italian
-      );
+      // Validate cards (support both old and new field names)
+      const validCards = data.cards
+        .map(normalizeCard)
+        .filter((c) => c.front && c.back);
 
       if (validCards.length === 0) {
         throw new Error('No valid cards found.');
@@ -39,12 +47,9 @@ export default function DeckImport({ onBack, onImported }) {
         user.uid,
         data.name,
         data.description || '',
-        validCards.map((c) => ({
-          german: c.german,
-          italian: c.italian,
-          exampleDE: c.exampleDE || '',
-          exampleIT: c.exampleIT || '',
-        }))
+        validCards,
+        data.sourceLang,
+        data.targetLang
       );
 
       onImported(deckId);
@@ -104,12 +109,22 @@ export default function DeckImport({ onBack, onImported }) {
             <pre className="bg-dark/5 rounded-lg p-3 text-xs text-dark/60 overflow-x-auto">
 {`{
   "name": "Deck name",
+  "sourceLang": {
+    "code": "en",
+    "name": "English",
+    "flag": "\uD83C\uDDEC\uD83C\uDDE7"
+  },
+  "targetLang": {
+    "code": "es",
+    "name": "Español",
+    "flag": "\uD83C\uDDEA\uD83C\uDDF8"
+  },
   "cards": [
     {
-      "german": "Wort",
-      "italian": "Word",
-      "exampleDE": "Ein Satz",
-      "exampleIT": "A sentence"
+      "front": "Word",
+      "back": "Palabra",
+      "exampleFront": "A sentence",
+      "exampleBack": "Una frase"
     }
   ]
 }`}

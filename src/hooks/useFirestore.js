@@ -115,11 +115,13 @@ export function useProgress(deckId, mode, direction) {
   return { progress, loading, updateProgress, refetch: fetchProgress };
 }
 
-export async function importDeck(userId, name, description, cards) {
+export async function importDeck(userId, name, description, cards, sourceLang, targetLang) {
   const deckRef = await addDoc(collection(db, 'decks'), {
     userId,
     name,
     description,
+    sourceLang: sourceLang || { code: 'de', name: 'Deutsch', flag: '🇩🇪' },
+    targetLang: targetLang || { code: 'it', name: 'Italiano', flag: '🇮🇹' },
     totalCards: cards.length,
     createdAt: new Date().toISOString(),
   });

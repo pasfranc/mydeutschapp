@@ -1,156 +1,158 @@
 {
   "name": "Vocabolario Tedesco PM",
   "description": "Vocabolario di project management in tedesco",
+  "sourceLang": { "code": "de", "name": "Deutsch", "flag": "🇩🇪" },
+  "targetLang": { "code": "it", "name": "Italiano", "flag": "🇮🇹" },
   "cards": [
     {
-      "german": "verantwortlich sein für",
-      "italian": "essere responsabile per",
-      "exampleDE": "Ich bin verantwortlich für das Produkt.",
-      "exampleIT": "Io sono responsabile per il prodotto."
+      "front": "verantwortlich sein für",
+      "back": "essere responsabile per",
+      "exampleFront": "Ich bin verantwortlich für das Produkt.",
+      "exampleBack": "Io sono responsabile per il prodotto."
     },
     {
-      "german": "die Besprechung",
-      "italian": "la riunione",
-      "exampleDE": "Die Besprechung beginnt um 10 Uhr.",
-      "exampleIT": "La riunione inizia alle 10."
+      "front": "die Besprechung",
+      "back": "la riunione",
+      "exampleFront": "Die Besprechung beginnt um 10 Uhr.",
+      "exampleBack": "La riunione inizia alle 10."
     },
     {
-      "german": "der Termin",
-      "italian": "l'appuntamento / la scadenza",
-      "exampleDE": "Wir müssen den Termin einhalten.",
-      "exampleIT": "Dobbiamo rispettare la scadenza."
+      "front": "der Termin",
+      "back": "l'appuntamento / la scadenza",
+      "exampleFront": "Wir müssen den Termin einhalten.",
+      "exampleBack": "Dobbiamo rispettare la scadenza."
     },
     {
-      "german": "die Anforderung",
-      "italian": "il requisito",
-      "exampleDE": "Die Anforderungen sind klar definiert.",
-      "exampleIT": "I requisiti sono chiaramente definiti."
+      "front": "die Anforderung",
+      "back": "il requisito",
+      "exampleFront": "Die Anforderungen sind klar definiert.",
+      "exampleBack": "I requisiti sono chiaramente definiti."
     },
     {
-      "german": "das Ergebnis",
-      "italian": "il risultato",
-      "exampleDE": "Das Ergebnis ist sehr gut.",
-      "exampleIT": "Il risultato è molto buono."
+      "front": "das Ergebnis",
+      "back": "il risultato",
+      "exampleFront": "Das Ergebnis ist sehr gut.",
+      "exampleBack": "Il risultato è molto buono."
     },
     {
-      "german": "die Aufgabe",
-      "italian": "il compito / il task",
-      "exampleDE": "Jeder hat seine Aufgabe.",
-      "exampleIT": "Ognuno ha il suo compito."
+      "front": "die Aufgabe",
+      "back": "il compito / il task",
+      "exampleFront": "Jeder hat seine Aufgabe.",
+      "exampleBack": "Ognuno ha il suo compito."
     },
     {
-      "german": "die Frist",
-      "italian": "il termine / la scadenza",
-      "exampleDE": "Die Frist läuft morgen ab.",
-      "exampleIT": "Il termine scade domani."
+      "front": "die Frist",
+      "back": "il termine / la scadenza",
+      "exampleFront": "Die Frist läuft morgen ab.",
+      "exampleBack": "Il termine scade domani."
     },
     {
-      "german": "der Fortschritt",
-      "italian": "il progresso",
-      "exampleDE": "Der Fortschritt ist sichtbar.",
-      "exampleIT": "Il progresso è visibile."
+      "front": "der Fortschritt",
+      "back": "il progresso",
+      "exampleFront": "Der Fortschritt ist sichtbar.",
+      "exampleBack": "Il progresso è visibile."
     },
     {
-      "german": "die Genehmigung",
-      "italian": "l'approvazione",
-      "exampleDE": "Wir brauchen die Genehmigung.",
-      "exampleIT": "Abbiamo bisogno dell'approvazione."
+      "front": "die Genehmigung",
+      "back": "l'approvazione",
+      "exampleFront": "Wir brauchen die Genehmigung.",
+      "exampleBack": "Abbiamo bisogno dell'approvazione."
     },
     {
-      "german": "der Vorschlag",
-      "italian": "la proposta",
-      "exampleDE": "Der Vorschlag wurde angenommen.",
-      "exampleIT": "La proposta è stata accettata."
+      "front": "der Vorschlag",
+      "back": "la proposta",
+      "exampleFront": "Der Vorschlag wurde angenommen.",
+      "exampleBack": "La proposta è stata accettata."
     },
     {
-      "german": "die Zusammenarbeit",
-      "italian": "la collaborazione",
-      "exampleDE": "Die Zusammenarbeit funktioniert gut.",
-      "exampleIT": "La collaborazione funziona bene."
+      "front": "die Zusammenarbeit",
+      "back": "la collaborazione",
+      "exampleFront": "Die Zusammenarbeit funktioniert gut.",
+      "exampleBack": "La collaborazione funziona bene."
     },
     {
-      "german": "umsetzen",
-      "italian": "implementare / realizzare",
-      "exampleDE": "Wir setzen den Plan um.",
-      "exampleIT": "Implementiamo il piano."
+      "front": "umsetzen",
+      "back": "implementare / realizzare",
+      "exampleFront": "Wir setzen den Plan um.",
+      "exampleBack": "Implementiamo il piano."
     },
     {
-      "german": "die Abnahme",
-      "italian": "l'accettazione / il collaudo",
-      "exampleDE": "Die Abnahme ist für Freitag geplant.",
-      "exampleIT": "Il collaudo è previsto per venerdì."
+      "front": "die Abnahme",
+      "back": "l'accettazione / il collaudo",
+      "exampleFront": "Die Abnahme ist für Freitag geplant.",
+      "exampleBack": "Il collaudo è previsto per venerdì."
     },
     {
-      "german": "der Meilenstein",
-      "italian": "la milestone / il traguardo",
-      "exampleDE": "Der erste Meilenstein ist erreicht.",
-      "exampleIT": "La prima milestone è raggiunta."
+      "front": "der Meilenstein",
+      "back": "la milestone / il traguardo",
+      "exampleFront": "Der erste Meilenstein ist erreicht.",
+      "exampleBack": "La prima milestone è raggiunta."
     },
     {
-      "german": "die Rückmeldung",
-      "italian": "il feedback / il riscontro",
-      "exampleDE": "Ich brauche Ihre Rückmeldung.",
-      "exampleIT": "Ho bisogno del suo feedback."
+      "front": "die Rückmeldung",
+      "back": "il feedback / il riscontro",
+      "exampleFront": "Ich brauche Ihre Rückmeldung.",
+      "exampleBack": "Ho bisogno del suo feedback."
     },
     {
-      "german": "der Stakeholder",
-      "italian": "lo stakeholder / la parte interessata",
-      "exampleDE": "Die Stakeholder sind zufrieden.",
-      "exampleIT": "Gli stakeholder sono soddisfatti."
+      "front": "der Stakeholder",
+      "back": "lo stakeholder / la parte interessata",
+      "exampleFront": "Die Stakeholder sind zufrieden.",
+      "exampleBack": "Gli stakeholder sono soddisfatti."
     },
     {
-      "german": "die Schätzung",
-      "italian": "la stima",
-      "exampleDE": "Die Schätzung war korrekt.",
-      "exampleIT": "La stima era corretta."
+      "front": "die Schätzung",
+      "back": "la stima",
+      "exampleFront": "Die Schätzung war korrekt.",
+      "exampleBack": "La stima era corretta."
     },
     {
-      "german": "das Risiko",
-      "italian": "il rischio",
-      "exampleDE": "Das Risiko ist hoch.",
-      "exampleIT": "Il rischio è alto."
+      "front": "das Risiko",
+      "back": "il rischio",
+      "exampleFront": "Das Risiko ist hoch.",
+      "exampleBack": "Il rischio è alto."
     },
     {
-      "german": "die Ressource",
-      "italian": "la risorsa",
-      "exampleDE": "Wir haben nicht genug Ressourcen.",
-      "exampleIT": "Non abbiamo abbastanza risorse."
+      "front": "die Ressource",
+      "back": "la risorsa",
+      "exampleFront": "Wir haben nicht genug Ressourcen.",
+      "exampleBack": "Non abbiamo abbastanza risorse."
     },
     {
-      "german": "abstimmen",
-      "italian": "coordinarsi / concordare",
-      "exampleDE": "Wir müssen uns abstimmen.",
-      "exampleIT": "Dobbiamo coordinarci."
+      "front": "abstimmen",
+      "back": "coordinarsi / concordare",
+      "exampleFront": "Wir müssen uns abstimmen.",
+      "exampleBack": "Dobbiamo coordinarci."
     },
     {
-      "german": "die Lieferung",
-      "italian": "la consegna / il deliverable",
-      "exampleDE": "Die Lieferung ist pünktlich.",
-      "exampleIT": "La consegna è puntuale."
+      "front": "die Lieferung",
+      "back": "la consegna / il deliverable",
+      "exampleFront": "Die Lieferung ist pünktlich.",
+      "exampleBack": "La consegna è puntuale."
     },
     {
-      "german": "der Projektplan",
-      "italian": "il piano di progetto",
-      "exampleDE": "Der Projektplan muss aktualisiert werden.",
-      "exampleIT": "Il piano di progetto deve essere aggiornato."
+      "front": "der Projektplan",
+      "back": "il piano di progetto",
+      "exampleFront": "Der Projektplan muss aktualisiert werden.",
+      "exampleBack": "Il piano di progetto deve essere aggiornato."
     },
     {
-      "german": "die Qualitätssicherung",
-      "italian": "la garanzia di qualità / QA",
-      "exampleDE": "Die Qualitätssicherung ist wichtig.",
-      "exampleIT": "La garanzia di qualità è importante."
+      "front": "die Qualitätssicherung",
+      "back": "la garanzia di qualità / QA",
+      "exampleFront": "Die Qualitätssicherung ist wichtig.",
+      "exampleBack": "La garanzia di qualità è importante."
     },
     {
-      "german": "beauftragen",
-      "italian": "incaricare / commissionare",
-      "exampleDE": "Wir beauftragen einen Berater.",
-      "exampleIT": "Incarichiamo un consulente."
+      "front": "beauftragen",
+      "back": "incaricare / commissionare",
+      "exampleFront": "Wir beauftragen einen Berater.",
+      "exampleBack": "Incarichiamo un consulente."
     },
     {
-      "german": "die Verbesserung",
-      "italian": "il miglioramento",
-      "exampleDE": "Die Verbesserung ist notwendig.",
-      "exampleIT": "Il miglioramento è necessario."
+      "front": "die Verbesserung",
+      "back": "il miglioramento",
+      "exampleFront": "Die Verbesserung ist notwendig.",
+      "exampleBack": "Il miglioramento è necessario."
     }
   ]
 }

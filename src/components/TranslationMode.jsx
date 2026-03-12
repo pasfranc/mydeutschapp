@@ -5,6 +5,8 @@ import { validateTranslation } from '../utils/validation';
 export default function TranslationMode({
   cards,
   direction,
+  sourceLang,
+  targetLang,
   progressMap,
   onUpdateProgress,
   onComplete,
@@ -24,13 +26,13 @@ export default function TranslationMode({
 
   // The sentence to translate
   const prompt =
-    direction === 'de-it' ? card?.exampleDE || card?.german : card?.exampleIT || card?.italian;
+    direction === 'source-target' ? card?.exampleFront || card?.front : card?.exampleBack || card?.back;
   // The correct answer
   const correctAnswer =
-    direction === 'de-it' ? card?.exampleIT || card?.italian : card?.exampleDE || card?.german;
+    direction === 'source-target' ? card?.exampleBack || card?.back : card?.exampleFront || card?.front;
 
-  const promptLabel =
-    direction === 'de-it' ? 'Translate to Italian:' : 'Translate to German:';
+  const answerLang = direction === 'source-target' ? targetLang : sourceLang;
+  const promptLabel = `Translate to ${answerLang.name}:`;
 
   useEffect(() => {
     if (!result && textareaRef.current) {
