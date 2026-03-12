@@ -160,7 +160,7 @@ function AppContent() {
 
   const handlePracticeHardest = useCallback((cardIds) => {
     setStudyMode('flashcard');
-    setStudyDirection('de-it');
+    setStudyDirection('source-target');
     setStudySize(cardIds.length);
     setFilterCardIds(cardIds);
     setScreen('study');

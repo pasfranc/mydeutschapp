@@ -3,11 +3,17 @@ import { collection, query, where, getDocs } from 'firebase/firestore';
 import { db } from '../utils/firebase';
 import { useAuth } from '../context/AuthContext';
 
+const DEFAULT_SOURCE = { code: 'de', name: 'Deutsch', flag: '🇩🇪' };
+const DEFAULT_TARGET = { code: 'it', name: 'Italiano', flag: '🇮🇹' };
+
 export default function DeckStats({ deck, onBack, onPracticeHardest }) {
   const { user } = useAuth();
   const [loading, setLoading] = useState(true);
   const [cards, setCards] = useState([]);
   const [allProgress, setAllProgress] = useState([]);
+
+  const sourceLang = deck.sourceLang || DEFAULT_SOURCE;
+  const targetLang = deck.targetLang || DEFAULT_TARGET;
 
   useEffect(() => {
     if (!user || !deck) return;
@@ -24,7 +30,14 @@ export default function DeckStats({ deck, onBack, onPracticeHardest }) {
             )
           ),
         ]);
-        setCards(cardsSnap.docs.map((d) => ({ id: d.id, ...d.data() })));
+        setCards(cardsSnap.docs.map((d) => {
+          const data = d.data();
+          return {
+            id: d.id,
+            front: data.front || data.german || '',
+            back: data.back || data.italian || '',
+          };
+        }));
         setAllProgress(progressSnap.docs.map((d) => d.data()));
       } catch (err) {
         console.error('Error fetching stats:', err);
@@ -88,12 +101,23 @@ export default function DeckStats({ deck, onBack, onPracticeHardest }) {
 
   const hardestCardIds = hardest.map((c) => c.id);
 
-  // Mode labels
-  const modeLabels = {
-    'flashcard_de-it': { icon: '🎴', label: 'Flashcard DE → IT' },
-    'flashcard_it-de': { icon: '🎴', label: 'Flashcard IT → DE' },
-    'translation_de-it': { icon: '✍️', label: 'Translation DE → IT' },
-    'translation_it-de': { icon: '✍️', label: 'Translation IT → DE' },
+  // Dynamic mode labels based on deck languages
+  const getModeLabel = (key) => {
+    const [mode, direction] = key.split('_');
+    const icon = mode === 'flashcard' ? '🎴' : '✍️';
+    const modeName = mode === 'flashcard' ? 'Flashcard' : 'Translation';
+
+    // Support both old (de-it) and new (source-target) direction formats
+    let dirLabel;
+    if (direction === 'source-target' || direction === `${sourceLang.code}-${targetLang.code}`) {
+      dirLabel = `${sourceLang.flag} → ${targetLang.flag}`;
+    } else if (direction === 'target-source' || direction === `${targetLang.code}-${sourceLang.code}`) {
+      dirLabel = `${targetLang.flag} → ${sourceLang.flag}`;
+    } else {
+      dirLabel = direction;
+    }
+
+    return { icon, label: `${modeName} ${dirLabel}` };
   };
 
   return (
@@ -156,7 +180,7 @@ export default function DeckStats({ deck, onBack, onPracticeHardest }) {
             <h2 className="text-lg font-bold text-dark mb-3">By mode</h2>
             <div className="space-y-3">
               {Object.entries(groups).map(([key, progList]) => {
-                const info = modeLabels[key] || { icon: '📊', label: key };
+                const info = getModeLabel(key);
                 const groupCards = new Set(progList.map((p) => p.cardId));
                 const groupMastered = progList.filter((p) => p.interval >= 21).length;
                 const groupAvgEF = progList.reduce((s, p) => s + p.easeFactor, 0) / progList.length;
@@ -191,8 +215,8 @@ export default function DeckStats({ deck, onBack, onPracticeHardest }) {
                       <span className="text-xs font-bold text-error">{difficulty}%</span>
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-semibold text-dark truncate">{card.german}</p>
-                      <p className="text-xs text-dark/50 truncate">{card.italian}</p>
+                      <p className="text-sm font-semibold text-dark truncate">{card.front}</p>
+                      <p className="text-xs text-dark/50 truncate">{card.back}</p>
                     </div>
                   </div>
                 );
