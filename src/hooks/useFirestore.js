@@ -54,7 +54,16 @@ export function useDeckCards(deckId) {
         const snapshot = await getDocs(
           collection(db, 'decks', deckId, 'cards')
         );
-        setCards(snapshot.docs.map((d) => ({ id: d.id, ...d.data() })));
+        setCards(snapshot.docs.map((d) => {
+          const data = d.data();
+          return {
+            id: d.id,
+            front: data.front || data.german || '',
+            back: data.back || data.italian || '',
+            exampleFront: data.exampleFront || data.exampleDE || '',
+            exampleBack: data.exampleBack || data.exampleIT || '',
+          };
+        }));
       } catch (err) {
         console.error('Error fetching cards:', err);
       } finally {
