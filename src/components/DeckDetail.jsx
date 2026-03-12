@@ -3,6 +3,9 @@ import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../utils/firebase';
 import { addCard, updateCard, deleteCard, deleteDeck } from '../hooks/useFirestore';
 
+const DEFAULT_SOURCE = { code: 'de', name: 'Deutsch', flag: '🇩🇪' };
+const DEFAULT_TARGET = { code: 'it', name: 'Italiano', flag: '🇮🇹' };
+
 export default function DeckDetail({ deck, onBack, onDeckDeleted }) {
   const [cards, setCards] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -10,9 +13,12 @@ export default function DeckDetail({ deck, onBack, onDeckDeleted }) {
   const [editForm, setEditForm] = useState({});
   const [saving, setSaving] = useState(false);
   const [adding, setAdding] = useState(false);
-  const [addForm, setAddForm] = useState({ german: '', italian: '', exampleDE: '', exampleIT: '' });
+  const [addForm, setAddForm] = useState({ front: '', back: '', exampleFront: '', exampleBack: '' });
   const [showDeleteDeck, setShowDeleteDeck] = useState(false);
   const [deletingDeck, setDeletingDeck] = useState(false);
+
+  const sourceLang = deck.sourceLang || DEFAULT_SOURCE;
+  const targetLang = deck.targetLang || DEFAULT_TARGET;
 
   useEffect(() => {
     if (!deck) return;
@@ -22,7 +28,16 @@ export default function DeckDetail({ deck, onBack, onDeckDeleted }) {
         const snapshot = await getDocs(
           collection(db, 'decks', deck.id, 'cards')
         );
-        setCards(snapshot.docs.map((d) => ({ id: d.id, ...d.data() })));
+        setCards(snapshot.docs.map((d) => {
+          const data = d.data();
+          return {
+            id: d.id,
+            front: data.front || data.german || '',
+            back: data.back || data.italian || '',
+            exampleFront: data.exampleFront || data.exampleDE || '',
+            exampleBack: data.exampleBack || data.exampleIT || '',
+          };
+        }));
       } catch (err) {
         console.error('Error fetching cards:', err);
       } finally {
@@ -35,10 +50,10 @@ export default function DeckDetail({ deck, onBack, onDeckDeleted }) {
   const handleEdit = (card) => {
     setEditingId(card.id);
     setEditForm({
-      german: card.german || '',
-      italian: card.italian || '',
-      exampleDE: card.exampleDE || '',
-      exampleIT: card.exampleIT || '',
+      front: card.front || '',
+      back: card.back || '',
+      exampleFront: card.exampleFront || '',
+      exampleBack: card.exampleBack || '',
     });
   };
 
@@ -78,7 +93,7 @@ export default function DeckDetail({ deck, onBack, onDeckDeleted }) {
       const id = await addCard(deck.id, addForm);
       setCards((prev) => [...prev, { id, ...addForm }]);
       setAdding(false);
-      setAddForm({ german: '', italian: '', exampleDE: '', exampleIT: '' });
+      setAddForm({ front: '', back: '', exampleFront: '', exampleBack: '' });
     } catch (err) {
       console.error('Error adding card:', err);
     } finally {
@@ -88,7 +103,7 @@ export default function DeckDetail({ deck, onBack, onDeckDeleted }) {
 
   const handleCancelAdd = () => {
     setAdding(false);
-    setAddForm({ german: '', italian: '', exampleDE: '', exampleIT: '' });
+    setAddForm({ front: '', back: '', exampleFront: '', exampleBack: '' });
   };
 
   const handleDeleteDeck = async () => {
@@ -111,6 +126,63 @@ export default function DeckDetail({ deck, onBack, onDeckDeleted }) {
     );
   }
 
+  const renderCardForm = (form, setForm, onSave, onCancel, isSaving) => (
+    <div className="space-y-3">
+      <div>
+        <label className="text-xs font-medium text-dark/40 block mb-1">{sourceLang.flag} {sourceLang.name}</label>
+        <input
+          type="text"
+          value={form.front}
+          onChange={(e) => setForm({ ...form, front: e.target.value })}
+          className="w-full px-3 py-2 rounded-lg border-2 border-gray-200 focus:border-secondary focus:outline-none text-base"
+          autoFocus={!onSave}
+        />
+      </div>
+      <div>
+        <label className="text-xs font-medium text-dark/40 block mb-1">{targetLang.flag} {targetLang.name}</label>
+        <input
+          type="text"
+          value={form.back}
+          onChange={(e) => setForm({ ...form, back: e.target.value })}
+          className="w-full px-3 py-2 rounded-lg border-2 border-gray-200 focus:border-secondary focus:outline-none text-base"
+        />
+      </div>
+      <div>
+        <label className="text-xs font-medium text-dark/40 block mb-1">Example ({sourceLang.code.toUpperCase()})</label>
+        <input
+          type="text"
+          value={form.exampleFront}
+          onChange={(e) => setForm({ ...form, exampleFront: e.target.value })}
+          className="w-full px-3 py-2 rounded-lg border-2 border-gray-200 focus:border-secondary focus:outline-none text-base"
+        />
+      </div>
+      <div>
+        <label className="text-xs font-medium text-dark/40 block mb-1">Example ({targetLang.code.toUpperCase()})</label>
+        <input
+          type="text"
+          value={form.exampleBack}
+          onChange={(e) => setForm({ ...form, exampleBack: e.target.value })}
+          className="w-full px-3 py-2 rounded-lg border-2 border-gray-200 focus:border-secondary focus:outline-none text-base"
+        />
+      </div>
+      <div className="flex gap-2 pt-1">
+        <button
+          onClick={onSave}
+          disabled={isSaving || !form.front.trim() || !form.back.trim()}
+          className="flex-1 bg-secondary text-white font-semibold rounded-lg py-2 text-sm active:scale-95 transition-transform disabled:opacity-50"
+        >
+          {isSaving ? 'Saving...' : 'Save'}
+        </button>
+        <button
+          onClick={onCancel}
+          className="flex-1 bg-gray-100 text-dark/60 font-semibold rounded-lg py-2 text-sm active:scale-95 transition-transform"
+        >
+          Cancel
+        </button>
+      </div>
+    </div>
+  );
+
   return (
     <div className="min-h-dvh bg-light safe-area-top flex flex-col">
       {/* Header */}
@@ -129,69 +201,22 @@ export default function DeckDetail({ deck, onBack, onDeckDeleted }) {
         {cards.map((card) => (
           <div key={card.id} className="card">
             {editingId === card.id ? (
-              /* Inline edit */
-              <div className="space-y-3">
-                <div>
-                  <label className="text-xs font-medium text-dark/40 block mb-1">German</label>
-                  <input
-                    type="text"
-                    value={editForm.german}
-                    onChange={(e) => setEditForm({ ...editForm, german: e.target.value })}
-                    className="w-full px-3 py-2 rounded-lg border-2 border-gray-200 focus:border-secondary focus:outline-none text-base"
-                  />
-                </div>
-                <div>
-                  <label className="text-xs font-medium text-dark/40 block mb-1">Italian</label>
-                  <input
-                    type="text"
-                    value={editForm.italian}
-                    onChange={(e) => setEditForm({ ...editForm, italian: e.target.value })}
-                    className="w-full px-3 py-2 rounded-lg border-2 border-gray-200 focus:border-secondary focus:outline-none text-base"
-                  />
-                </div>
-                <div>
-                  <label className="text-xs font-medium text-dark/40 block mb-1">Example (DE)</label>
-                  <input
-                    type="text"
-                    value={editForm.exampleDE}
-                    onChange={(e) => setEditForm({ ...editForm, exampleDE: e.target.value })}
-                    className="w-full px-3 py-2 rounded-lg border-2 border-gray-200 focus:border-secondary focus:outline-none text-base"
-                  />
-                </div>
-                <div>
-                  <label className="text-xs font-medium text-dark/40 block mb-1">Example (IT)</label>
-                  <input
-                    type="text"
-                    value={editForm.exampleIT}
-                    onChange={(e) => setEditForm({ ...editForm, exampleIT: e.target.value })}
-                    className="w-full px-3 py-2 rounded-lg border-2 border-gray-200 focus:border-secondary focus:outline-none text-base"
-                  />
-                </div>
-                <div className="flex gap-2 pt-1">
-                  <button
-                    onClick={() => handleSave(card.id)}
-                    disabled={saving || !editForm.german.trim() || !editForm.italian.trim() || !editForm.exampleDE.trim() || !editForm.exampleIT.trim()}
-                    className="flex-1 bg-secondary text-white font-semibold rounded-lg py-2 text-sm active:scale-95 transition-transform disabled:opacity-50"
-                  >
-                    {saving ? 'Saving...' : 'Save'}
-                  </button>
-                  <button
-                    onClick={handleCancel}
-                    className="flex-1 bg-gray-100 text-dark/60 font-semibold rounded-lg py-2 text-sm active:scale-95 transition-transform"
-                  >
-                    Cancel
-                  </button>
-                </div>
-              </div>
+              renderCardForm(
+                editForm,
+                setEditForm,
+                () => handleSave(card.id),
+                handleCancel,
+                saving
+              )
             ) : (
               /* Card display */
               <div className="flex items-start gap-3">
                 <div className="flex-1 min-w-0" onClick={() => handleEdit(card)}>
                   <p className="font-semibold text-dark text-base truncate">
-                    {card.german}
+                    {card.front}
                   </p>
                   <p className="text-dark/50 text-sm truncate">
-                    {card.italian}
+                    {card.back}
                   </p>
                 </div>
                 <button
@@ -214,59 +239,14 @@ export default function DeckDetail({ deck, onBack, onDeckDeleted }) {
 
         {/* Add card */}
         {adding ? (
-          <div className="card space-y-3">
-            <div>
-              <label className="text-xs font-medium text-dark/40 block mb-1">German</label>
-              <input
-                type="text"
-                value={addForm.german}
-                onChange={(e) => setAddForm({ ...addForm, german: e.target.value })}
-                className="w-full px-3 py-2 rounded-lg border-2 border-gray-200 focus:border-secondary focus:outline-none text-base"
-                autoFocus
-              />
-            </div>
-            <div>
-              <label className="text-xs font-medium text-dark/40 block mb-1">Italian</label>
-              <input
-                type="text"
-                value={addForm.italian}
-                onChange={(e) => setAddForm({ ...addForm, italian: e.target.value })}
-                className="w-full px-3 py-2 rounded-lg border-2 border-gray-200 focus:border-secondary focus:outline-none text-base"
-              />
-            </div>
-            <div>
-              <label className="text-xs font-medium text-dark/40 block mb-1">Example (DE)</label>
-              <input
-                type="text"
-                value={addForm.exampleDE}
-                onChange={(e) => setAddForm({ ...addForm, exampleDE: e.target.value })}
-                className="w-full px-3 py-2 rounded-lg border-2 border-gray-200 focus:border-secondary focus:outline-none text-base"
-              />
-            </div>
-            <div>
-              <label className="text-xs font-medium text-dark/40 block mb-1">Example (IT)</label>
-              <input
-                type="text"
-                value={addForm.exampleIT}
-                onChange={(e) => setAddForm({ ...addForm, exampleIT: e.target.value })}
-                className="w-full px-3 py-2 rounded-lg border-2 border-gray-200 focus:border-secondary focus:outline-none text-base"
-              />
-            </div>
-            <div className="flex gap-2 pt-1">
-              <button
-                onClick={handleAddCard}
-                disabled={saving || !addForm.german.trim() || !addForm.italian.trim() || !addForm.exampleDE.trim() || !addForm.exampleIT.trim()}
-                className="flex-1 bg-secondary text-white font-semibold rounded-lg py-2 text-sm active:scale-95 transition-transform disabled:opacity-50"
-              >
-                {saving ? 'Saving...' : 'Save'}
-              </button>
-              <button
-                onClick={handleCancelAdd}
-                className="flex-1 bg-gray-100 text-dark/60 font-semibold rounded-lg py-2 text-sm active:scale-95 transition-transform"
-              >
-                Cancel
-              </button>
-            </div>
+          <div className="card">
+            {renderCardForm(
+              addForm,
+              setAddForm,
+              handleAddCard,
+              handleCancelAdd,
+              saving
+            )}
           </div>
         ) : (
           <button

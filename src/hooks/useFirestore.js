@@ -5,6 +5,7 @@ import {
   getDocs,
   setDoc,
   updateDoc,
+  deleteDoc,
   addDoc,
   query,
   where,
@@ -207,6 +208,28 @@ export function useProgress(deckId, mode, direction) {
   );
 
   return { progress, loading, updateProgress, refetch: fetchProgress };
+}
+
+export async function addCard(deckId, cardData) {
+  const cardRef = await addDoc(collection(db, 'decks', deckId, 'cards'), cardData);
+  return cardRef.id;
+}
+
+export async function updateCard(deckId, cardId, cardData) {
+  await updateDoc(doc(db, 'decks', deckId, 'cards', cardId), cardData);
+}
+
+export async function deleteCard(deckId, cardId) {
+  await deleteDoc(doc(db, 'decks', deckId, 'cards', cardId));
+}
+
+export async function deleteDeck(deckId) {
+  // Delete all cards first
+  const cardsSnap = await getDocs(collection(db, 'decks', deckId, 'cards'));
+  const batch = writeBatch(db);
+  cardsSnap.docs.forEach((d) => batch.delete(d.ref));
+  batch.delete(doc(db, 'decks', deckId));
+  await batch.commit();
 }
 
 export async function importDeck(userId, name, description, cards, sourceLang, targetLang) {
